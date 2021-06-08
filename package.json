@@ -9,7 +9,7 @@
   },
   "scripts": {
     "lint": "standard *.js bin/* && dtslint --localTs node_modules/typescript/lib types",
-    "test": "bin/dnslink-test -- node test.js && bin/dnslink-test -e -- node test.js"
+    "test": "node bin/dnslink-test -- node test.js && node bin/dnslink-test -e -- node test.js"
   },
   "standard": {
     "ignore": "*.ts",
