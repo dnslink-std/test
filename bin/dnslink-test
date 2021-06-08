@@ -1,0 +1,79 @@
+#!/usr/bin/env node
+const { getCommand, runTests } = require('..')
+const { version, homepage } = require('../package.json')
+const AbortController = require('abort-controller')
+
+;(async function main () {
+  const controller = new AbortController()
+  const { signal } = controller
+  process.on('SIGINT', onSigint)
+  try {
+    const [args, cmdParts] = splitDoubleHyphen(process.argv.slice(2))
+    const withErrors = args.includes('--with-error-support') || args.includes('-e') || args.includes('--errors')
+    if (args.includes('-h') || args.includes('--help') || args.includes('help')) {
+      showHelp()
+      return
+    }
+    if (args.includes('-v') || args.includes('--version')) {
+      showVersion()
+      return
+    }
+    const { cmd, close } = await getCommand(cmdParts, signal)
+    try {
+      const harness = runTests(cmd, withErrors)
+      const stream = harness.createStream({ objectMode: false })
+      for await (const line of stream) {
+        if (signal.aborted) {
+          break
+        }
+        process.stdout.write(line.toString())
+      }
+    } finally {
+      close()
+    }
+  } finally {
+    process.off('SIGINT', onSigint)
+  }
+
+  function onSigint () {
+    controller.abort()
+  }
+})()
+  .catch(err => {
+    console.error((err && (err.stack || err.message)) || err)
+    process.exit(1)
+  })
+
+function showHelp () {
+  console.log(`dnslink-test [--with-error-support] [--help] [--version] -- <command>
+
+Usage:
+
+dnslink-test -- my-impl      Run the "my-impl" command against a series of tests
+dnslink-test -e -- my-impl   Run the "my-impl" command against a series of tests with
+                             error support
+
+Options:
+
+--help, -h, help                     Show this help
+--version, -v                        Show the version of this command
+--with-error-support, --errors, -e   Enable tests for error messages
+
+Read more about it here: ${homepage}
+
+dnslink-test@${version}
+`)
+}
+
+function showVersion () {
+  console.lov(version)
+}
+
+function splitDoubleHyphen (args) {
+  for (let i = 0; i < args.length; i++) {
+    if (args[i] === '--') {
+      return [args.slice(0, i), args.slice(i + 1)]
+    }
+  }
+  return [args, []]
+}

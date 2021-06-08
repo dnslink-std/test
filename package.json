@@ -1,0 +1,45 @@
+{
+  "name": "@dnslink/test",
+  "version": "0.0.1",
+  "description": "A programming-language independent test harness for DNSLink implementations.",
+  "main": "index.js",
+  "types": "types",
+  "bin": {
+    "dnslink-test": "./bin/dnslink-test"
+  },
+  "scripts": {
+    "lint": "standard *.js bin/* && dtslint --localTs node_modules/typescript/lib types",
+    "test": "bin/dnslink-test -- node test.js && bin/dnslink-test -e -- node test.js"
+  },
+  "standard": {
+    "ignore": "*.ts",
+    "include": "bin/dnslink-test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dnslink-std/test.git"
+  },
+  "keywords": [
+    "dnslink",
+    "test",
+    "standard"
+  ],
+  "author": "Martin Heidegger <martin.heidegger@gmail.com>",
+  "license": "MIT OR Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/dnslink-std/test/issues"
+  },
+  "homepage": "https://github.com/dnslink-std/test#readme",
+  "dependencies": {
+    "abort-controller": "^3.0.0",
+    "dns2": "github:song940/node-dns",
+    "fast-deep-equal": "^3.1.3",
+    "fresh-tape": "^5.2.4",
+    "which": "^2.0.2"
+  },
+  "devDependencies": {
+    "dtslint": "^4.1.0",
+    "standard": "^16.0.3",
+    "typescript": "^4.3.2"
+  }
+}
