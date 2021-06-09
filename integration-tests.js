@@ -220,6 +220,7 @@ module.exports = {
   },
   't13: .eth domain support.': {
     domain: 'dnslink.eth',
+    flag: 'eth',
     dns: domain => ({
       [`${domain}.link`]: ['dnslink=/ipfs/AAJK']
     }),

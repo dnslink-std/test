@@ -73,6 +73,7 @@ Options:
 Flags:
 
 --enable=error   Test if the implementation supports errors
+--enable=eth     Test if the implementation supports .eth domains
 
 Read more about it here: ${homepage}
 
