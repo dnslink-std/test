@@ -12,17 +12,20 @@ const AbortController = require('abort-controller')
     const withErrors = args.includes('--with-error-support') || args.includes('-e') || args.includes('--errors')
     if (args.includes('-h') || args.includes('--help') || args.includes('help')) {
       showHelp()
+      return 0
     }
     if (cmdParts.length === 0) {
       showHelp()
+      return 1
     }
     if (args.includes('-v') || args.includes('--version')) {
       showVersion()
-      return
+      return 0
     }
     const { cmd, close } = await getCommand(cmdParts, signal)
     try {
-      const harness = runTests(cmd, withErrors)
+      let exit = 0
+      harness.onFailure(() => { exit = 1 })
       const stream = harness.createStream({ objectMode: false })
       for await (const line of stream) {
         if (signal.aborted) {
@@ -30,6 +33,7 @@ const AbortController = require('abort-controller')
         }
         process.stdout.write(line.toString())
       }
+      return signal.aborted ? 1 : exit
     } finally {
       close()
     }
@@ -41,10 +45,13 @@ const AbortController = require('abort-controller')
     controller.abort()
   }
 })()
-  .catch(err => {
-    console.error((err && (err.stack || err.message)) || err)
-    process.exit(1)
-  })
+  .then(
+    code => process.exit(code),
+    err => {
+      console.error((err && (err.stack || err.message)) || err)
+      process.exit(1)
+    }
+  )
 
 function showHelp () {
   console.log(`dnslink-test [--with-error-support] [--help] [--version] -- <command>
