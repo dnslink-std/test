@@ -12,7 +12,9 @@ const AbortController = require('abort-controller')
     const withErrors = args.includes('--with-error-support') || args.includes('-e') || args.includes('--errors')
     if (args.includes('-h') || args.includes('--help') || args.includes('help')) {
       showHelp()
-      return
+    }
+    if (cmdParts.length === 0) {
+      showHelp()
     }
     if (args.includes('-v') || args.includes('--version')) {
       showVersion()
