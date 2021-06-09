@@ -17,4 +17,4 @@ export const tests: {
   }
 };
 
-export function runTests(cmd: Command, withErrors?: boolean): typeof tape;
+export function runTests(cmd: Command, flags?: { [flag: string]: boolean }): typeof tape;

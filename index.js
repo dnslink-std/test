@@ -109,14 +109,29 @@ function getExecutable (input) {
     ))
 }
 
-function runTests (cmd, withErrors = true) {
+function runTests (cmd, flags = {}) {
   const test = tape.createHarness()
   const _cmd = (domain, options) => cmd(domain, {
-    withErrors,
+    flags,
     ...options
   })
-  Object.entries(tests).forEach(([name, { run, targetDomain }]) => {
+  test('Enabled Flags', t => {
+    let oneFound = false
+    for (const key in flags) {
+      oneFound = true
+      t.pass(`"${key}" enabled.`)
+    }
+    if (!oneFound) {
+      t.pass('No flags enabled.')
+    }
+    t.end()
+  })
+  Object.entries(tests).forEach(([name, { run, targetDomain, flag }]) => {
     test(`${name} (${targetDomain})`, async t => {
+      if (flag && !flags[flag]) {
+        t.pass(`Skipped. Enable "${flag}" flag for this test to run.`)
+        return
+      }
       t.dnslink = dnslink
       await run(t, _cmd, targetDomain)
       function dnslink (actual, expected) {
@@ -126,7 +141,7 @@ function runTests (cmd, withErrors = true) {
         }
         t.deepEquals(excludeErrors(actual), excludeErrors(expected))
         const errorSet = new Set(actual.errors)
-        if (withErrors && expected.errors) {
+        if (flags.error && expected.errors) {
           for (const expectedError of expected.errors) {
             let found
             for (const actualError of errorSet) {

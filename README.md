@@ -21,7 +21,7 @@ To use this harness you need to prepare an executable, lets call it `my-impl`.
 5. Now you can run tests using `dnslink-test -- my-impl` and it will show whether or not your implementation passes.
 6. Optionally, your implementation may support error messages and/or codes for debugging why a dnslink entry can not
    found. To enable this you need to also return a `errors` object that contains all the errors and run the tests with
-   the `--with-error-support` flag: `$ dnslink-test --with-error-support -- my-impl`
+   the `--enable error` flag: `$ dnslink-test --enable error -- my-impl`
 
 The list of rules that an implementation needs to cover is defined in [`./integration-tests.js`](./integration-tests.js).
 
