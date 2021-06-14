@@ -74,10 +74,11 @@ async function getCommand (cmd, signal) {
             end(new Error(`Process Error [${code}]: ${Buffer.concat(err).toString()}`))
           } else {
             let json
+            const txt = Buffer.concat(out).toString()
             try {
-              json = JSON.parse(Buffer.concat(out).toString())
+              json = JSON.parse(txt)
             } catch (error) {
-              end(new Error(`Non-JSON output: ${error}`))
+              end(new Error(`Non-JSON output: ${error}: ${txt}`))
             }
             end(null, json)
           }
