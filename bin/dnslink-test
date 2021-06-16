@@ -103,7 +103,7 @@ function getFlags (args) {
 }
 
 function showVersion () {
-  console.lov(version)
+  console.log(version)
 }
 
 function splitDoubleHyphen (args) {
