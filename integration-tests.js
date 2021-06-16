@@ -24,7 +24,7 @@ module.exports = {
       t.dnslink(await cmd(`_dnslink.${domain}`), result)
     }
   },
-  't04: Repeat _dnslink subdomains should cause an error': {
+  't04: Repeat _dnslink subdomains should cause a warning': {
     dns: domain => ({
       [domain]: ['dnslink=/ipfs/efgh'],
       [`_dnslink.${domain}`]: ['dnslink=/ipfs/IJKL'],
@@ -37,7 +37,7 @@ module.exports = {
       t.dnslink(await cmd(`_dnslink.${domain}`), result)
       t.dnslink(await cmd(`_dnslink._dnslink.${domain}`), {
         found: {},
-        errors: [{ code: 'RECURSIVE_DNSLINK_PREFIX', domain: `_dnslink._dnslink.${domain}` }]
+        warnings: [{ code: 'RECURSIVE_DNSLINK_PREFIX', domain: `_dnslink._dnslink.${domain}` }]
       })
     }
   },
@@ -48,9 +48,9 @@ module.exports = {
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
         found: { ipfs: 'MNOP' },
-        errors: [
-          { code: 'INVALID_ENTRY', entry: 'dnslink=/ipfs/', reason: 'NO_VALUE' },
-          { code: 'INVALID_ENTRY', entry: 'dnslink=/ipfs/ ', reason: 'NO_VALUE' }
+        warnings: [
+          { code: 'INVALID_ENTRY', entry: 'dnslink=/ipfs/', reason: 'NO_VALUE', domain },
+          { code: 'INVALID_ENTRY', entry: 'dnslink=/ipfs/ ', reason: 'NO_VALUE', domain }
         ]
       })
     }
@@ -62,9 +62,9 @@ module.exports = {
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
         found: { ipfs: 'QRST' },
-        errors: [
-          { code: 'CONFLICT_ENTRY', entry: 'dnslink=/ipfs/Z123' },
-          { code: 'CONFLICT_ENTRY', entry: 'dnslink=/ipfs/ UVWX' }
+        warnings: [
+          { code: 'CONFLICT_ENTRY', entry: 'dnslink=/ipfs/Z123', domain },
+          { code: 'CONFLICT_ENTRY', entry: 'dnslink=/ipfs/ UVWX', domain }
         ]
       })
     }
@@ -77,7 +77,7 @@ module.exports = {
       t.dnslink(await cmd(domain), { found: { ipfs: '4567', ipns: '890A', hyper: 'AABC' } })
     }
   },
-  't08: Different invalid entries should cause different error messages.': {
+  't08: Different invalid entries should cause different warning messages.': {
     dns: domain => ({
       [domain]: [
         'dnslink=',
@@ -92,11 +92,11 @@ module.exports = {
         found: {
           foo: 'bar'
         },
-        errors: [
-          { code: 'INVALID_ENTRY', entry: 'dnslink=', reason: 'WRONG_START' },
-          { code: 'INVALID_ENTRY', entry: 'dnslink=/', reason: 'KEY_MISSING' },
-          { code: 'INVALID_ENTRY', entry: 'dnslink=/foo', reason: 'NO_VALUE' },
-          { code: 'INVALID_ENTRY', entry: 'dnslink=/foo/', reason: 'NO_VALUE' }
+        warnings: [
+          { code: 'INVALID_ENTRY', entry: 'dnslink=', reason: 'WRONG_START', domain },
+          { code: 'INVALID_ENTRY', entry: 'dnslink=/', reason: 'KEY_MISSING', domain },
+          { code: 'INVALID_ENTRY', entry: 'dnslink=/foo', reason: 'NO_VALUE', domain },
+          { code: 'INVALID_ENTRY', entry: 'dnslink=/foo/', reason: 'NO_VALUE', domain }
         ]
       })
     }
@@ -192,7 +192,7 @@ module.exports = {
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
         found: {},
-        errors: [
+        warnings: [
           {
             code: 'TOO_MANY_REDIRECTS',
             chain: [
@@ -214,7 +214,7 @@ module.exports = {
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
         found: {},
-        errors: [{ code: 'ENDLESS_REDIRECT', chain: [domain, `1.${domain}`, domain] }]
+        warnings: [{ code: 'ENDLESS_REDIRECT', chain: [domain, `1.${domain}`, domain] }]
       })
     }
   },
@@ -236,13 +236,13 @@ module.exports = {
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
         found: { ipns: 'AALM' },
-        errors: [
+        warnings: [
           { code: 'UNUSED_ENTRY', entry: 'dnslink=/ipfs/mnop', domain }
         ]
       })
     }
   },
-  't15: Errors before redirects get assigned a domain': {
+  't15: warnings before redirects get assigned a domain': {
     dns: domain => ({
       [domain]: [`dnslink=/dns/1.${domain}`, 'dnslink=/ipfs/mnop', 'dnslink='],
       [`1.${domain}`]: [`dnslink=/dns/2.${domain}`, 'dnslink=/ipfs/qrst'],
@@ -252,7 +252,7 @@ module.exports = {
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
         found: { ipns: 'AANO' },
-        errors: [
+        warnings: [
           { code: 'INVALID_ENTRY', entry: 'dnslink=', reason: 'WRONG_START', domain },
           { code: 'UNUSED_ENTRY', entry: 'dnslink=/ipfs/mnop', domain },
           { code: 'UNUSED_ENTRY', entry: 'dnslink=/ipfs/qrst', domain: `1.${domain}` },

@@ -61,8 +61,8 @@ Usage:
 
 dnslink-test -- my-impl            Run the "my-impl" command against a series
                                    of tests
-dnslink-test -e error -- my-impl   Run the "my-impl" command against a series
-                                   of tests with error support
+dnslink-test -e warning -- my-impl Run the "my-impl" command against a series
+                                   of tests with warning support
 
 Options:
 
@@ -72,8 +72,8 @@ Options:
 
 Flags:
 
---enable=error   Test if the implementation supports errors
---enable=eth     Test if the implementation supports .eth domains
+--enable=warning   Test if the implementation supports warnings
+--enable=eth       Test if the implementation supports .eth domains
 
 Read more about it here: ${homepage}
 

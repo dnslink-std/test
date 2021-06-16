@@ -140,27 +140,27 @@ function runTests (cmd, flags = {}) {
           t.fail('Result is empty')
           return
         }
-        t.deepEquals(excludeErrors(actual), excludeErrors(expected))
-        const errorSet = new Set(actual.errors)
-        if (flags.error && expected.errors) {
-          for (const expectedError of expected.errors) {
+        t.deepEquals(excludeWarnings(actual), excludeWarnings(expected))
+        const warnSet = new Set(actual.warnings)
+        if (flags.warning && expected.warnings) {
+          for (const expectedWarning of expected.warnings) {
             let found
-            for (const actualError of errorSet) {
-              if (deepEqual(expectedError, actualError)) {
-                errorSet.delete(actualError)
-                found = actualError
+            for (const actualWarning of warnSet) {
+              if (deepEqual(expectedWarning, actualWarning)) {
+                warnSet.delete(actualWarning)
+                found = actualWarning
                 break
               }
             }
             if (found) {
-              t.pass('Expected error returned: ' + inspect(expectedError))
+              t.pass('Expected warning returned: ' + inspect(expectedWarning))
             } else {
-              t.fail('Error missing: ' + inspect(expectedError))
+              t.fail('Warning missing: ' + inspect(expectedWarning))
             }
           }
         }
-        for (const error of errorSet) {
-          t.fail('Unexpected error: ' + inspect(error))
+        for (const warning of warnSet) {
+          t.fail('Unexpected warning: ' + inspect(warning))
         }
       }
     })
@@ -168,9 +168,9 @@ function runTests (cmd, flags = {}) {
   return test
 }
 
-function excludeErrors (obj) {
+function excludeWarnings (obj) {
   obj = { ...obj }
-  delete obj.errors
+  delete obj.warnings
   return obj
 }
 
