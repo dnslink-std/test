@@ -43,11 +43,11 @@ async function getCommand (cmd, signal) {
     getExecutable(cmd.shift()),
     createServer(SETUP)
   ])
-  const { close } = server
+  const addresses = server.addresses()
   const serverOpts = {
-    udp: server.udp.address.port,
-    tcp: server.tcp.address.port,
-    doh: server.doh.address.port
+    udp: addresses.udp.port,
+    tcp: addresses.tcp.port,
+    doh: addresses.doh.port
   }
   return {
     cmd (domain, options) {
@@ -90,7 +90,7 @@ async function getCommand (cmd, signal) {
         }
       })
     },
-    close
+    close: () => server.close()
   }
 }
 
