@@ -3,8 +3,9 @@ module.exports = {
     dns () {},
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
-        found: {},
-        warnings: [
+        links: {},
+        path: [],
+        log: [
           { code: 'REDIRECT', domain: `_dnslink.${domain}` },
           { code: 'RESOLVE', domain }
         ]
@@ -17,8 +18,9 @@ module.exports = {
     }),
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
-        found: { ipfs: 'ABCD' },
-        warnings: [
+        links: { ipfs: 'ABCD' },
+        path: [],
+        log: [
           { code: 'REDIRECT', domain: `_dnslink.${domain}` },
           { code: 'RESOLVE', domain }
         ]
@@ -32,14 +34,15 @@ module.exports = {
     }),
     async run (t, cmd, domain) {
       const result = {
-        found: { ipfs: 'EFGH' },
-        warnings: [{ code: 'RESOLVE', domain: `_dnslink.${domain}` }]
+        links: { ipfs: 'EFGH' },
+        path: [],
+        log: [{ code: 'RESOLVE', domain: `_dnslink.${domain}` }]
       }
       t.dnslink(await cmd(domain), result)
       t.dnslink(await cmd(`_dnslink.${domain}`), result)
     }
   },
-  't04: Repeat _dnslink subdomains should cause a warning': {
+  't04: Repeat _dnslink subdomains should cause a log entry': {
     dns: domain => ({
       [domain]: ['dnslink=/ipfs/efgh'],
       [`_dnslink.${domain}`]: ['dnslink=/ipfs/IJKL'],
@@ -48,14 +51,16 @@ module.exports = {
     }),
     async run (t, cmd, domain) {
       const result = {
-        found: { ipfs: 'IJKL' },
-        warnings: [{ code: 'RESOLVE', domain: `_dnslink.${domain}` }]
+        links: { ipfs: 'IJKL' },
+        path: [],
+        log: [{ code: 'RESOLVE', domain: `_dnslink.${domain}` }]
       }
       t.dnslink(await cmd(domain), result)
       t.dnslink(await cmd(`_dnslink.${domain}`), result)
       t.dnslink(await cmd(`_dnslink._dnslink.${domain}`), {
-        found: {},
-        warnings: [{ code: 'RECURSIVE_DNSLINK_PREFIX', domain: `_dnslink._dnslink.${domain}` }]
+        links: {},
+        path: [],
+        log: [{ code: 'RECURSIVE_DNSLINK_PREFIX', domain: `_dnslink._dnslink.${domain}` }]
       })
     }
   },
@@ -65,8 +70,9 @@ module.exports = {
     }),
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
-        found: { ipfs: 'MNOP' },
-        warnings: [
+        links: { ipfs: 'MNOP' },
+        path: [],
+        log: [
           { code: 'INVALID_ENTRY', entry: 'dnslink=/ipfs/', reason: 'NO_VALUE' },
           { code: 'INVALID_ENTRY', entry: 'dnslink=/ipfs/ ', reason: 'NO_VALUE' },
           { code: 'RESOLVE', domain: `_dnslink.${domain}` }
@@ -80,8 +86,9 @@ module.exports = {
     }),
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
-        found: { ipfs: 'QRST' },
-        warnings: [
+        links: { ipfs: 'QRST' },
+        path: [],
+        log: [
           { code: 'REDIRECT', domain: `_dnslink.${domain}` },
           { code: 'CONFLICT_ENTRY', entry: 'dnslink=/ipfs/Z123' },
           { code: 'CONFLICT_ENTRY', entry: 'dnslink=/ipfs/ UVWX' },
@@ -96,15 +103,16 @@ module.exports = {
     }),
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
-        found: { ipfs: '4567', ipns: '890A', hyper: 'AABC' },
-        warnings: [
+        links: { ipfs: '4567', ipns: '890A', hyper: 'AABC' },
+        path: [],
+        log: [
           { code: 'REDIRECT', domain: `_dnslink.${domain}` },
           { code: 'RESOLVE', domain }
         ]
       })
     }
   },
-  't08: Different invalid entries should cause different warning messages.': {
+  't08: Different invalid entries should cause different log messages.': {
     dns: domain => ({
       [domain]: [
         'dnslink=',
@@ -116,10 +124,11 @@ module.exports = {
     }),
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
-        found: {
+        links: {
           foo: 'bar'
         },
-        warnings: [
+        path: [],
+        log: [
           { code: 'REDIRECT', domain: `_dnslink.${domain}` },
           { code: 'INVALID_ENTRY', entry: 'dnslink=', reason: 'WRONG_START' },
           { code: 'INVALID_ENTRY', entry: 'dnslink=/', reason: 'KEY_MISSING' },
@@ -137,8 +146,9 @@ module.exports = {
     }),
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
-        found: { ipfs: 'AADE' },
-        warnings: [
+        links: { ipfs: 'AADE' },
+        path: [],
+        log: [
           { code: 'REDIRECT', domain: `_dnslink.${domain}` },
           { code: 'RESOLVE', domain: `_dnslink.b.${domain}` }
         ]
@@ -182,8 +192,13 @@ module.exports = {
     }),
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
-        found: { ipfs: 'AAFG' },
-        warnings: [
+        links: { ipfs: 'AAFG' },
+        path: [
+          { pathname: '/first-path%20', search: { ' goo': ['dom '] } },
+          { pathname: '/inbetween-path/moo-x%20abcd-foo', search: { foo: ['baz'] } },
+          { pathname: '/last-path', search: { foo: ['bar', 'bak'] } }
+        ],
+        log: [
           { code: 'REDIRECT', domain: `_dnslink.${domain}` },
           { code: 'REDIRECT', domain: `_dnslink.2.${domain}`, pathname: '/last-path', search: { foo: ['bar', 'bak'] } },
           { code: 'REDIRECT', domain: `_dnslink.3.${domain}` },
@@ -258,8 +273,9 @@ module.exports = {
     }),
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
-        found: {},
-        warnings: [
+        links: {},
+        path: [],
+        log: [
           { code: 'REDIRECT', domain: `_dnslink.${domain}` },
           { code: 'REDIRECT', domain: `_dnslink.2.${domain}` },
           { code: 'REDIRECT', domain: `_dnslink.3.${domain}` },
@@ -304,8 +320,9 @@ module.exports = {
     }),
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
-        found: {},
-        warnings: [
+        links: {},
+        path: [],
+        log: [
           { code: 'REDIRECT', domain: `_dnslink.${domain}` },
           { code: 'REDIRECT', domain: `_dnslink.1.${domain}` },
           { code: 'RESOLVE', domain: `1.${domain}` },
@@ -323,8 +340,9 @@ module.exports = {
     }),
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
-        found: { ipfs: 'AAJK' },
-        warnings: [
+        links: { ipfs: 'AAJK' },
+        path: [],
+        log: [
           { code: 'RESOLVE', domain: `_dnslink.${domain}` }
         ]
       })
@@ -337,8 +355,9 @@ module.exports = {
     }),
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
-        found: { ipns: 'AALM' },
-        warnings: [
+        links: { ipns: 'AALM' },
+        path: [],
+        log: [
           { code: 'REDIRECT', domain: `_dnslink.${domain}` },
           { code: 'UNUSED_ENTRY', entry: 'dnslink=/ipfs/mnop' },
           { code: 'REDIRECT', domain },
@@ -348,7 +367,7 @@ module.exports = {
       })
     }
   },
-  't15: warnings before redirects get assigned a domain': {
+  't15: log order is maintained in redirects domain': {
     dns: domain => ({
       [domain]: [`dnslink=/dns/1.${domain}`, 'dnslink=/ipfs/mnop', 'dnslink='],
       [`1.${domain}`]: [`dnslink=/dns/2.${domain}`, 'dnslink=/ipfs/qrst'],
@@ -357,8 +376,9 @@ module.exports = {
     }),
     async run (t, cmd, domain) {
       t.dnslink(await cmd(`${domain}/test-path?foo=bar&foo=baz&goo=ey`), {
-        found: { ipns: 'AANO' },
-        warnings: [
+        links: { ipns: 'AANO' },
+        path: [{ pathname: '/test-path', search: { foo: ['bar', 'baz'], goo: ['ey'] } }],
+        log: [
           { code: 'REDIRECT', domain: `_dnslink.${domain}`, pathname: '/test-path', search: { foo: ['bar', 'baz'], goo: ['ey'] } },
           { code: 'INVALID_ENTRY', entry: 'dnslink=', reason: 'WRONG_START' },
           { code: 'UNUSED_ENTRY', entry: 'dnslink=/ipfs/mnop' },

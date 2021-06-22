@@ -59,10 +59,10 @@ function showHelp () {
 
 Usage:
 
-dnslink-test -- my-impl            Run the "my-impl" command against a series
-                                   of tests
-dnslink-test -e warning -- my-impl Run the "my-impl" command against a series
-                                   of tests with warning support
+dnslink-test -- my-impl          Run the "my-impl" command against a series of
+                                 tests
+dnslink-test -e log -- my-impl   Run the "my-impl" command against a series
+                                 of tests with log support
 
 Options:
 
@@ -72,8 +72,8 @@ Options:
 
 Flags:
 
---enable=warning   Test if the implementation supports warnings
---enable=eth       Test if the implementation supports .eth domains
+--enable=log   Test if the implementation supports log messages
+--enable=eth   Test if the implementation supports .eth domains
 
 Read more about it here: ${homepage}
 

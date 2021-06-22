@@ -140,37 +140,37 @@ function runTests (cmd, flags = {}) {
           t.fail('Result is empty')
           return
         }
-        t.deepEquals(excludeWarnings(actual), excludeWarnings(expected))
-        if (flags.warning && expected.warnings) {
-          let warns = []
-          if (Array.isArray(actual.warnings)) {
-            warns = actual.warnings
+        t.deepEquals(excludeLog(actual), excludeLog(expected))
+        if (flags.log && expected.log) {
+          let log = []
+          if (Array.isArray(actual.log)) {
+            log = actual.log
           } else {
-            t.fail('No warnings given.')
+            t.fail('No log given.')
           }
-          const warnSet = new Set(warns)
-          for (const [expectedIndex, expectedWarning] of Object.entries(expected.warnings)) {
+          const logSet = new Set(log)
+          for (const [expectedIndex, expectedEntry] of Object.entries(expected.log)) {
             let foundIndex
-            for (const [actualIndex, actualWarning] of Object.entries(warns)) {
-              if (deepEqual(expectedWarning, actualWarning)) {
-                warnSet.delete(actualWarning)
+            for (const [actualIndex, actualEntry] of Object.entries(log)) {
+              if (deepEqual(expectedEntry, actualEntry)) {
+                logSet.delete(actualEntry)
                 foundIndex = actualIndex
                 break
               }
             }
             if (foundIndex !== undefined) {
               // Note: Redirect entries need to come in order but the entries inbetween may be shuffled.
-              if (foundIndex !== expectedIndex && expectedWarning.code === 'REDIRECT') {
-                t.fail('Expected warning found, but at wrong index. actual=' + foundIndex + ' != expected=' + expectedIndex + ': ' + inspect(expectedWarning))
+              if (foundIndex !== expectedIndex && expectedEntry.code === 'REDIRECT') {
+                t.fail('Expected log entry found, but at wrong index. actual=' + foundIndex + ' != expected=' + expectedIndex + ': ' + inspect(expectedEntry))
               } else {
-                t.pass('Expected warning returned: ' + inspect(expectedWarning))
+                t.pass('Expected log entry returned: ' + inspect(expectedEntry))
               }
             } else {
-              t.fail('Warning missing: ' + inspect(expectedWarning))
+              t.fail('Log entry missing: ' + inspect(expectedEntry))
             }
           }
-          for (const warning of warnSet) {
-            t.fail('Unexpected warning: ' + inspect(warning))
+          for (const logEntry of logSet) {
+            t.fail('Unexpected log entry: ' + inspect(logEntry))
           }
         }
       }
@@ -179,9 +179,9 @@ function runTests (cmd, flags = {}) {
   return test
 }
 
-function excludeWarnings (obj) {
+function excludeLog (obj) {
   obj = { ...obj }
-  delete obj.warnings
+  delete obj.log
   return obj
 }
 
