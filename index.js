@@ -141,26 +141,37 @@ function runTests (cmd, flags = {}) {
           return
         }
         t.deepEquals(excludeWarnings(actual), excludeWarnings(expected))
-        const warnSet = new Set(actual.warnings)
         if (flags.warning && expected.warnings) {
-          for (const expectedWarning of expected.warnings) {
-            let found
-            for (const actualWarning of warnSet) {
+          let warns = []
+          if (Array.isArray(actual.warnings)) {
+            warns = actual.warnings
+          } else {
+            t.fail('No warnings given.')
+          }
+          const warnSet = new Set(warns)
+          for (const [expectedIndex, expectedWarning] of Object.entries(expected.warnings)) {
+            let foundIndex
+            for (const [actualIndex, actualWarning] of Object.entries(warns)) {
               if (deepEqual(expectedWarning, actualWarning)) {
                 warnSet.delete(actualWarning)
-                found = actualWarning
+                foundIndex = actualIndex
                 break
               }
             }
-            if (found) {
-              t.pass('Expected warning returned: ' + inspect(expectedWarning))
+            if (foundIndex !== undefined) {
+              // Note: Redirect entries need to come in order but the entries inbetween may be shuffled.
+              if (foundIndex !== expectedIndex && expectedWarning.code === 'REDIRECT') {
+                t.fail('Expected warning found, but at wrong index. actual=' + foundIndex + ' != expected=' + expectedIndex + ': ' + inspect(expectedWarning))
+              } else {
+                t.pass('Expected warning returned: ' + inspect(expectedWarning))
+              }
             } else {
               t.fail('Warning missing: ' + inspect(expectedWarning))
             }
           }
-        }
-        for (const warning of warnSet) {
-          t.fail('Unexpected warning: ' + inspect(warning))
+          for (const warning of warnSet) {
+            t.fail('Unexpected warning: ' + inspect(warning))
+          }
         }
       }
     })

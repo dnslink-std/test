@@ -2,7 +2,13 @@ module.exports = {
   't01: A domain without a dnslink-entry, should return empty.': {
     dns () {},
     async run (t, cmd, domain) {
-      t.dnslink(await cmd(domain), { found: {} })
+      t.dnslink(await cmd(domain), {
+        found: {},
+        warnings: [
+          { code: 'REDIRECT', domain: `_dnslink.${domain}` },
+          { code: 'RESOLVE', domain }
+        ]
+      })
     }
   },
   't02: A domain without a _dnslink subdomain, containing one valid ipfs link, should return that link.': {
@@ -10,7 +16,13 @@ module.exports = {
       [domain]: ['dnslink=/ipfs/ABCD']
     }),
     async run (t, cmd, domain) {
-      t.dnslink(await cmd(domain), { found: { ipfs: 'ABCD' } })
+      t.dnslink(await cmd(domain), {
+        found: { ipfs: 'ABCD' },
+        warnings: [
+          { code: 'REDIRECT', domain: `_dnslink.${domain}` },
+          { code: 'RESOLVE', domain }
+        ]
+      })
     }
   },
   't03: A domain with _dnslink subdomain, containing one valid ipfs link, should return that.': {
@@ -19,7 +31,10 @@ module.exports = {
       [`_dnslink.${domain}`]: ['dnslink=/ipfs/EFGH']
     }),
     async run (t, cmd, domain) {
-      const result = { found: { ipfs: 'EFGH' } }
+      const result = {
+        found: { ipfs: 'EFGH' },
+        warnings: [{ code: 'RESOLVE', domain: `_dnslink.${domain}` }]
+      }
       t.dnslink(await cmd(domain), result)
       t.dnslink(await cmd(`_dnslink.${domain}`), result)
     }
@@ -32,7 +47,10 @@ module.exports = {
       [`_dnslink._dnslink._dnslink.${domain}`]: ['dnslink=/ipfs/ijkl']
     }),
     async run (t, cmd, domain) {
-      const result = { found: { ipfs: 'IJKL' } }
+      const result = {
+        found: { ipfs: 'IJKL' },
+        warnings: [{ code: 'RESOLVE', domain: `_dnslink.${domain}` }]
+      }
       t.dnslink(await cmd(domain), result)
       t.dnslink(await cmd(`_dnslink.${domain}`), result)
       t.dnslink(await cmd(`_dnslink._dnslink.${domain}`), {
@@ -49,8 +67,9 @@ module.exports = {
       t.dnslink(await cmd(domain), {
         found: { ipfs: 'MNOP' },
         warnings: [
-          { code: 'INVALID_ENTRY', entry: 'dnslink=/ipfs/', reason: 'NO_VALUE', domain },
-          { code: 'INVALID_ENTRY', entry: 'dnslink=/ipfs/ ', reason: 'NO_VALUE', domain }
+          { code: 'INVALID_ENTRY', entry: 'dnslink=/ipfs/', reason: 'NO_VALUE' },
+          { code: 'INVALID_ENTRY', entry: 'dnslink=/ipfs/ ', reason: 'NO_VALUE' },
+          { code: 'RESOLVE', domain: `_dnslink.${domain}` }
         ]
       })
     }
@@ -63,8 +82,10 @@ module.exports = {
       t.dnslink(await cmd(domain), {
         found: { ipfs: 'QRST' },
         warnings: [
-          { code: 'CONFLICT_ENTRY', entry: 'dnslink=/ipfs/Z123', domain },
-          { code: 'CONFLICT_ENTRY', entry: 'dnslink=/ipfs/ UVWX', domain }
+          { code: 'REDIRECT', domain: `_dnslink.${domain}` },
+          { code: 'CONFLICT_ENTRY', entry: 'dnslink=/ipfs/Z123' },
+          { code: 'CONFLICT_ENTRY', entry: 'dnslink=/ipfs/ UVWX' },
+          { code: 'RESOLVE', domain }
         ]
       })
     }
@@ -74,7 +95,13 @@ module.exports = {
       [domain]: ['dnslink=/ipfs/4567', 'dnslink=/ipns/890A', 'dnslink=/hyper/AABC']
     }),
     async run (t, cmd, domain) {
-      t.dnslink(await cmd(domain), { found: { ipfs: '4567', ipns: '890A', hyper: 'AABC' } })
+      t.dnslink(await cmd(domain), {
+        found: { ipfs: '4567', ipns: '890A', hyper: 'AABC' },
+        warnings: [
+          { code: 'REDIRECT', domain: `_dnslink.${domain}` },
+          { code: 'RESOLVE', domain }
+        ]
+      })
     }
   },
   't08: Different invalid entries should cause different warning messages.': {
@@ -93,10 +120,12 @@ module.exports = {
           foo: 'bar'
         },
         warnings: [
-          { code: 'INVALID_ENTRY', entry: 'dnslink=', reason: 'WRONG_START', domain },
-          { code: 'INVALID_ENTRY', entry: 'dnslink=/', reason: 'KEY_MISSING', domain },
-          { code: 'INVALID_ENTRY', entry: 'dnslink=/foo', reason: 'NO_VALUE', domain },
-          { code: 'INVALID_ENTRY', entry: 'dnslink=/foo/', reason: 'NO_VALUE', domain }
+          { code: 'REDIRECT', domain: `_dnslink.${domain}` },
+          { code: 'INVALID_ENTRY', entry: 'dnslink=', reason: 'WRONG_START' },
+          { code: 'INVALID_ENTRY', entry: 'dnslink=/', reason: 'KEY_MISSING' },
+          { code: 'INVALID_ENTRY', entry: 'dnslink=/foo', reason: 'NO_VALUE' },
+          { code: 'INVALID_ENTRY', entry: 'dnslink=/foo/', reason: 'NO_VALUE' },
+          { code: 'RESOLVE', domain }
         ]
       })
     }
@@ -108,100 +137,162 @@ module.exports = {
     }),
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
-        found: { ipfs: 'AADE' }
+        found: { ipfs: 'AADE' },
+        warnings: [
+          { code: 'REDIRECT', domain: `_dnslink.${domain}` },
+          { code: 'RESOLVE', domain: `_dnslink.b.${domain}` }
+        ]
       })
     }
   },
   't10: 32 redirects are expected to work.': {
     dns: domain => ({
-      [`${domain}`]: [`dnslink=/dns/2.${domain}`],
-      [`2.${domain}`]: [`dnslink=/dns/_dnslink.3.${domain}`],
-      [`3.${domain}`]: [`dnslink=/dns/4.${domain}`],
-      [`4.${domain}`]: [`dnslink=/dns/5.${domain}`],
-      [`5.${domain}`]: [`dnslink=/dns/6.${domain}`],
-      [`6.${domain}`]: [`dnslink=/dns/7.${domain}`],
-      [`7.${domain}`]: [`dnslink=/dns/8.${domain}`],
-      [`8.${domain}`]: [`dnslink=/dns/9.${domain}`],
-      [`9.${domain}`]: [`dnslink=/dns/10.${domain}`],
-      [`10.${domain}`]: [`dnslink=/dns/11.${domain}`],
-      [`11.${domain}`]: [`dnslink=/dns/12.${domain}`],
-      [`12.${domain}`]: [`dnslink=/dns/13.${domain}`],
-      [`13.${domain}`]: [`dnslink=/dns/14.${domain}`],
-      [`14.${domain}`]: [`dnslink=/dns/15.${domain}`],
-      [`15.${domain}`]: [`dnslink=/dns/16.${domain}`],
-      [`16.${domain}`]: [`dnslink=/dns/17.${domain}`],
-      [`17.${domain}`]: [`dnslink=/dns/18.${domain}`],
-      [`18.${domain}`]: [`dnslink=/dns/19.${domain}`],
-      [`19.${domain}`]: [`dnslink=/dns/20.${domain}`],
-      [`20.${domain}`]: [`dnslink=/dns/21.${domain}`],
-      [`21.${domain}`]: [`dnslink=/dns/22.${domain}`],
-      [`22.${domain}`]: [`dnslink=/dns/23.${domain}`],
-      [`23.${domain}`]: [`dnslink=/dns/24.${domain}`],
-      [`24.${domain}`]: [`dnslink=/dns/25.${domain}`],
-      [`25.${domain}`]: [`dnslink=/dns/26.${domain}`],
-      [`26.${domain}`]: [`dnslink=/dns/27.${domain}`],
-      [`27.${domain}`]: [`dnslink=/dns/28.${domain}`],
-      [`28.${domain}`]: [`dnslink=/dns/29.${domain}`],
-      [`29.${domain}`]: [`dnslink=/dns/30.${domain}`],
-      [`30.${domain}`]: [`dnslink=/dns/31.${domain}`],
-      [`31.${domain}`]: [`dnslink=/dns/32.${domain}`],
-      [`32.${domain}`]: ['dnslink=/ipfs/AAFG']
+      [`_dnslink.${domain}`]: [`dnslink=/dns/2.${domain}/last-path?foo=bar&foo=bak`],
+      [`_dnslink.2.${domain}`]: [`dnslink=/dns/_dnslink.3.${domain}`],
+      [`_dnslink.3.${domain}`]: [`dnslink=/dns/4.${domain}`],
+      [`_dnslink.4.${domain}`]: [`dnslink=/dns/5.${domain}`],
+      [`_dnslink.5.${domain}`]: [`dnslink=/dns/6.${domain}`],
+      [`_dnslink.6.${domain}`]: [`dnslink=/dns/7.${domain}`],
+      [`_dnslink.7.${domain}`]: [`dnslink=/dns/8.${domain}`],
+      [`_dnslink.8.${domain}`]: [`dnslink=/dns/9.${domain}`],
+      [`_dnslink.9.${domain}`]: [`dnslink=/dns/10.${domain}`],
+      [`_dnslink.10.${domain}`]: [`dnslink=/dns/11.${domain}`],
+      [`_dnslink.11.${domain}`]: [`dnslink=/dns/12.${domain}`],
+      [`_dnslink.12.${domain}`]: [`dnslink=/dns/13.${domain}`],
+      [`_dnslink.13.${domain}`]: [`dnslink=/dns/14.${domain}`],
+      [`_dnslink.14.${domain}`]: [`dnslink=/dns/15.${domain}`],
+      [`_dnslink.15.${domain}`]: [`dnslink=/dns/16.${domain}`],
+      [`_dnslink.16.${domain}`]: [`dnslink=/dns/17.${domain}`],
+      [`_dnslink.17.${domain}`]: [`dnslink=/dns/18.${domain}/inbetween-path/moo-x abcd-foo?foo=baz`],
+      [`_dnslink.18.${domain}`]: [`dnslink=/dns/19.${domain}`],
+      [`_dnslink.19.${domain}`]: [`dnslink=/dns/20.${domain}`],
+      [`_dnslink.20.${domain}`]: [`dnslink=/dns/21.${domain}`],
+      [`_dnslink.21.${domain}`]: [`dnslink=/dns/22.${domain}`],
+      [`_dnslink.22.${domain}`]: [`dnslink=/dns/23.${domain}`],
+      [`_dnslink.23.${domain}`]: [`dnslink=/dns/24.${domain}`],
+      [`_dnslink.24.${domain}`]: [`dnslink=/dns/25.${domain}`],
+      [`_dnslink.25.${domain}`]: [`dnslink=/dns/26.${domain}`],
+      [`_dnslink.26.${domain}`]: [`dnslink=/dns/27.${domain}`],
+      [`_dnslink.27.${domain}`]: [`dnslink=/dns/28.${domain}`],
+      [`_dnslink.28.${domain}`]: [`dnslink=/dns/29.${domain}`],
+      [`_dnslink.29.${domain}`]: [`dnslink=/dns/30.${domain}`],
+      [`_dnslink.30.${domain}`]: [`dnslink=/dns/31.${domain}`],
+      [`_dnslink.31.${domain}`]: [`dnslink=/dns/32.${domain}/first-path ? goo=dom &# ha `],
+      [`_dnslink.32.${domain}`]: ['dnslink=/ipfs/AAFG']
     }),
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
-        found: { ipfs: 'AAFG' }
+        found: { ipfs: 'AAFG' },
+        warnings: [
+          { code: 'REDIRECT', domain: `_dnslink.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.2.${domain}`, pathname: '/last-path', search: { foo: ['bar', 'bak'] } },
+          { code: 'REDIRECT', domain: `_dnslink.3.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.4.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.5.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.6.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.7.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.8.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.9.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.10.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.11.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.12.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.13.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.14.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.15.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.16.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.17.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.18.${domain}`, pathname: '/inbetween-path/moo-x%20abcd-foo', search: { foo: ['baz'] } },
+          { code: 'REDIRECT', domain: `_dnslink.19.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.20.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.21.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.22.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.23.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.24.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.25.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.26.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.27.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.28.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.29.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.30.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.31.${domain}` },
+          { code: 'RESOLVE', domain: `_dnslink.32.${domain}`, pathname: '/first-path%20', search: { ' goo': ['dom '] } }
+        ]
       })
     }
   },
   't11: 33 redirects should exceed the limit of redirects.': {
     dns: domain => ({
-      [`${domain}`]: [`dnslink=/dns/2.${domain}`],
-      [`2.${domain}`]: [`dnslink=/dns/_dnslink.3.${domain}`],
-      [`3.${domain}`]: [`dnslink=/dns/4.${domain}`],
-      [`4.${domain}`]: [`dnslink=/dns/5.${domain}`],
-      [`5.${domain}`]: [`dnslink=/dns/6.${domain}`],
-      [`6.${domain}`]: [`dnslink=/dns/7.${domain}`],
-      [`7.${domain}`]: [`dnslink=/dns/8.${domain}`],
-      [`8.${domain}`]: [`dnslink=/dns/9.${domain}`],
-      [`9.${domain}`]: [`dnslink=/dns/10.${domain}`],
-      [`10.${domain}`]: [`dnslink=/dns/11.${domain}`],
-      [`11.${domain}`]: [`dnslink=/dns/12.${domain}`],
-      [`12.${domain}`]: [`dnslink=/dns/13.${domain}`],
-      [`13.${domain}`]: [`dnslink=/dns/14.${domain}`],
-      [`14.${domain}`]: [`dnslink=/dns/15.${domain}`],
-      [`15.${domain}`]: [`dnslink=/dns/16.${domain}`],
-      [`16.${domain}`]: [`dnslink=/dns/17.${domain}`],
-      [`17.${domain}`]: [`dnslink=/dns/18.${domain}`],
-      [`18.${domain}`]: [`dnslink=/dns/19.${domain}`],
-      [`19.${domain}`]: [`dnslink=/dns/20.${domain}`],
-      [`20.${domain}`]: [`dnslink=/dns/21.${domain}`],
-      [`21.${domain}`]: [`dnslink=/dns/22.${domain}`],
-      [`22.${domain}`]: [`dnslink=/dns/23.${domain}`],
-      [`23.${domain}`]: [`dnslink=/dns/24.${domain}`],
-      [`24.${domain}`]: [`dnslink=/dns/25.${domain}`],
-      [`25.${domain}`]: [`dnslink=/dns/26.${domain}`],
-      [`26.${domain}`]: [`dnslink=/dns/27.${domain}`],
-      [`27.${domain}`]: [`dnslink=/dns/28.${domain}`],
-      [`28.${domain}`]: [`dnslink=/dns/29.${domain}`],
-      [`29.${domain}`]: [`dnslink=/dns/30.${domain}`],
-      [`30.${domain}`]: [`dnslink=/dns/31.${domain}`],
-      [`31.${domain}`]: [`dnslink=/dns/32.${domain}`],
-      [`32.${domain}`]: [`dnslink=/dns/33.${domain}`],
-      [`33.${domain}`]: ['dnslink=/ipfs/aahi']
+      [`_dnslink.${domain}`]: [`dnslink=/dns/2.${domain}`],
+      [`_dnslink.2.${domain}`]: [`dnslink=/dns/_dnslink.3.${domain}`],
+      [`_dnslink.3.${domain}`]: [`dnslink=/dns/4.${domain}`],
+      [`_dnslink.4.${domain}`]: [`dnslink=/dns/5.${domain}`],
+      [`_dnslink.5.${domain}`]: [`dnslink=/dns/6.${domain}`],
+      [`_dnslink.6.${domain}`]: [`dnslink=/dns/7.${domain}`],
+      [`_dnslink.7.${domain}`]: [`dnslink=/dns/8.${domain}`],
+      [`_dnslink.8.${domain}`]: [`dnslink=/dns/9.${domain}`],
+      [`_dnslink.9.${domain}`]: [`dnslink=/dns/10.${domain}`],
+      [`_dnslink.10.${domain}`]: [`dnslink=/dns/11.${domain}`],
+      [`_dnslink.11.${domain}`]: [`dnslink=/dns/12.${domain}`],
+      [`_dnslink.12.${domain}`]: [`dnslink=/dns/13.${domain}`],
+      [`_dnslink.13.${domain}`]: [`dnslink=/dns/14.${domain}`],
+      [`_dnslink.14.${domain}`]: [`dnslink=/dns/15.${domain}`],
+      [`_dnslink.15.${domain}`]: [`dnslink=/dns/16.${domain}`],
+      [`_dnslink.16.${domain}`]: [`dnslink=/dns/17.${domain}`],
+      [`_dnslink.17.${domain}`]: [`dnslink=/dns/18.${domain}`],
+      [`_dnslink.18.${domain}`]: [`dnslink=/dns/19.${domain}`],
+      [`_dnslink.19.${domain}`]: [`dnslink=/dns/20.${domain}`],
+      [`_dnslink.20.${domain}`]: [`dnslink=/dns/21.${domain}`],
+      [`_dnslink.21.${domain}`]: [`dnslink=/dns/22.${domain}`],
+      [`_dnslink.22.${domain}`]: [`dnslink=/dns/23.${domain}`],
+      [`_dnslink.23.${domain}`]: [`dnslink=/dns/24.${domain}`],
+      [`_dnslink.24.${domain}`]: [`dnslink=/dns/25.${domain}`],
+      [`_dnslink.25.${domain}`]: [`dnslink=/dns/26.${domain}`],
+      [`_dnslink.26.${domain}`]: [`dnslink=/dns/27.${domain}`],
+      [`_dnslink.27.${domain}`]: [`dnslink=/dns/28.${domain}`],
+      [`_dnslink.28.${domain}`]: [`dnslink=/dns/29.${domain}`],
+      [`_dnslink.29.${domain}`]: [`dnslink=/dns/30.${domain}`],
+      [`_dnslink.30.${domain}`]: [`dnslink=/dns/31.${domain}`],
+      [`_dnslink.31.${domain}`]: [`dnslink=/dns/32.${domain}`],
+      [`_dnslink.32.${domain}`]: [`dnslink=/dns/33.${domain}/ abcd`],
+      [`_dnslink.33.${domain}`]: ['dnslink=/ipfs/aahi']
     }),
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
         found: {},
         warnings: [
-          {
-            code: 'TOO_MANY_REDIRECTS',
-            chain: [
-              domain, `2.${domain}`, `3.${domain}`, `4.${domain}`, `5.${domain}`, `6.${domain}`, `7.${domain}`, `8.${domain}`, `9.${domain}`, `10.${domain}`,
-              `11.${domain}`, `12.${domain}`, `13.${domain}`, `14.${domain}`, `15.${domain}`, `16.${domain}`, `17.${domain}`, `18.${domain}`, `19.${domain}`, `20.${domain}`,
-              `21.${domain}`, `22.${domain}`, `23.${domain}`, `24.${domain}`, `25.${domain}`, `26.${domain}`, `27.${domain}`, `28.${domain}`, `29.${domain}`, `30.${domain}`,
-              `31.${domain}`, `32.${domain}`, `33.${domain}`
-            ]
-          }
+          { code: 'REDIRECT', domain: `_dnslink.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.2.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.3.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.4.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.5.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.6.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.7.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.8.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.9.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.10.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.11.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.12.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.13.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.14.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.15.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.16.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.17.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.18.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.19.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.20.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.21.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.22.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.23.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.24.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.25.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.26.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.27.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.28.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.29.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.30.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.31.${domain}` },
+          { code: 'RESOLVE', domain: `_dnslink.32.${domain}` },
+          { code: 'TOO_MANY_REDIRECTS', domain: '_dnslink.33.t11.dnslink.dev', pathname: '/%20abcd' }
         ]
       })
     }
@@ -214,7 +305,12 @@ module.exports = {
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
         found: {},
-        warnings: [{ code: 'ENDLESS_REDIRECT', chain: [domain, `1.${domain}`, domain] }]
+        warnings: [
+          { code: 'REDIRECT', domain: `_dnslink.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.1.${domain}` },
+          { code: 'RESOLVE', domain: `1.${domain}` },
+          { code: 'ENDLESS_REDIRECT', domain: `_dnslink.${domain}` }
+        ]
       })
     }
   },
@@ -222,10 +318,16 @@ module.exports = {
     domain: 'dnslink.eth',
     flag: 'eth',
     dns: domain => ({
+      [domain]: ['dnslink=/ipfs/AAJK'],
       [`${domain}.link`]: ['dnslink=/ipfs/AAJK']
     }),
     async run (t, cmd, domain) {
-      t.dnslink(await cmd(domain), { found: { ipfs: 'AAJK' } })
+      t.dnslink(await cmd(domain), {
+        found: { ipfs: 'AAJK' },
+        warnings: [
+          { code: 'RESOLVE', domain: `_dnslink.${domain}` }
+        ]
+      })
     }
   },
   't14: redirects take precendent over entries': {
@@ -237,7 +339,11 @@ module.exports = {
       t.dnslink(await cmd(domain), {
         found: { ipns: 'AALM' },
         warnings: [
-          { code: 'UNUSED_ENTRY', entry: 'dnslink=/ipfs/mnop', domain }
+          { code: 'REDIRECT', domain: `_dnslink.${domain}` },
+          { code: 'UNUSED_ENTRY', entry: 'dnslink=/ipfs/mnop' },
+          { code: 'REDIRECT', domain },
+          { code: 'REDIRECT', domain: `_dnslink.1.${domain}` },
+          { code: 'RESOLVE', domain: `1.${domain}` }
         ]
       })
     }
@@ -250,14 +356,23 @@ module.exports = {
       [`3.${domain}`]: ['dnslink=/ipns/AANO']
     }),
     async run (t, cmd, domain) {
-      t.dnslink(await cmd(domain), {
+      t.dnslink(await cmd(`${domain}/test-path?foo=bar&foo=baz&goo=ey`), {
         found: { ipns: 'AANO' },
         warnings: [
-          { code: 'INVALID_ENTRY', entry: 'dnslink=', reason: 'WRONG_START', domain },
-          { code: 'UNUSED_ENTRY', entry: 'dnslink=/ipfs/mnop', domain },
-          { code: 'UNUSED_ENTRY', entry: 'dnslink=/ipfs/qrst', domain: `1.${domain}` },
-          { code: 'INVALID_ENTRY', entry: 'dnslink=/ipfs/', reason: 'NO_VALUE', domain: `2.${domain}` },
-          { code: 'UNUSED_ENTRY', entry: 'dnslink=/ipns/uvwx', domain: `2.${domain}` }]
+          { code: 'REDIRECT', domain: `_dnslink.${domain}`, pathname: '/test-path', search: { foo: ['bar', 'baz'], goo: ['ey'] } },
+          { code: 'INVALID_ENTRY', entry: 'dnslink=', reason: 'WRONG_START' },
+          { code: 'UNUSED_ENTRY', entry: 'dnslink=/ipfs/mnop' },
+          { code: 'REDIRECT', domain },
+          { code: 'REDIRECT', domain: `_dnslink.1.${domain}` },
+          { code: 'UNUSED_ENTRY', entry: 'dnslink=/ipfs/qrst' },
+          { code: 'REDIRECT', domain: `1.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.2.${domain}` },
+          { code: 'INVALID_ENTRY', entry: 'dnslink=/ipfs/', reason: 'NO_VALUE' },
+          { code: 'UNUSED_ENTRY', entry: 'dnslink=/ipns/uvwx' },
+          { code: 'REDIRECT', domain: `2.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.3.${domain}` },
+          { code: 'RESOLVE', domain: `3.${domain}` }
+        ]
       })
     }
   }
