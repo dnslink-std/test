@@ -29,7 +29,7 @@ for (const [key, test] of Object.entries(tests)) {
     }
     for (const [domain, txtEntries] of Object.entries(entriesByDomain)) {
       SETUP[domain] = {
-        [Packet.TYPE.TXT]: { data: txtEntries }
+        [Packet.TYPE.TXT]: txtEntries.map(txtEntry => ({ data: [txtEntry] }))
       }
     }
   } catch (err) {
