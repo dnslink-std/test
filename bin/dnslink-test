@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const { getCommand, runTests } = require('..')
+const { startServer, getCommand, runTests } = require('..')
 const { version, homepage } = require('../package.json')
 const AbortController = require('abort-controller')
 
@@ -14,7 +14,8 @@ const AbortController = require('abort-controller')
       showHelp()
       return 0
     }
-    if (cmdParts.length === 0) {
+    const serverOnly = args.includes('--server-only')
+    if (!serverOnly && cmdParts.length === 0) {
       showHelp()
       return 1
     }
@@ -23,8 +24,13 @@ const AbortController = require('abort-controller')
       return 0
     }
     const exitEarly = args.includes('--early') || args.includes('--exit-early')
-    const { cmd, close } = await getCommand(cmdParts, signal)
+    const { serverOpts, close } = await startServer()
     try {
+      if (serverOnly) {
+        console.log(serverOpts)
+        return await new Promise(resolve => signal.addEventListener('abort', resolve))
+      }
+      const cmd = await getCommand(cmdParts, serverOpts, signal)
       const harness = runTests(cmd, flags)
       let exit = 0
       harness.onFailure(() => {
@@ -42,7 +48,7 @@ const AbortController = require('abort-controller')
       }
       return signal.aborted ? 1 : exit
     } finally {
-      close()
+      await close()
     }
   } finally {
     process.off('SIGINT', onSigint)
@@ -76,6 +82,8 @@ Options:
 --version, -v                Show the version of this command
 --enable=<flag>, -e <flag>   Enable a flag
 --exit-early, --early        Exit the when the first test fails
+--server-only                Start the test DNS server without running the
+                             tests
 
 Flags:
 

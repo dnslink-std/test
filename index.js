@@ -38,59 +38,60 @@ for (const [key, test] of Object.entries(tests)) {
   }
 }
 
-async function getCommand (cmd, signal) {
-  const [executable, server] = await Promise.all([
-    getExecutable(cmd.shift()),
-    createServer(SETUP)
-  ])
+async function startServer () {
+  const server = await createServer(SETUP)
   const addresses = server.addresses()
-  const serverOpts = {
-    udp: addresses.udp.port,
-    tcp: addresses.tcp.port,
-    doh: addresses.doh.port
-  }
   return {
-    cmd (domain, options) {
-      return new Promise((resolve, reject) => {
-        if (signal.aborted) {
-          reject(Error('Aborted.'))
-        }
-        const end = (err, data) => {
-          signal.removeEventListener('abort', onAbort)
-          if (err) {
-            reject(err)
-          } else {
-            resolve(data)
-          }
-        }
-        const out = []
-        const err = []
-        const p = spawn(executable, [...cmd, ...toTestArgs(domain, options, serverOpts)])
-        p.on('error', end)
-        p.stdout.on('data', data => out.push(data))
-        p.stderr.on('data', data => err.push(data))
-        p.on('close', code => {
-          if (code) {
-            end(new Error(`Process Error [${code}]: ${Buffer.concat(err).toString()}`))
-          } else {
-            let json
-            const txt = Buffer.concat(out).toString()
-            try {
-              json = JSON.parse(txt)
-            } catch (error) {
-              end(new Error(`Non-JSON output: ${error}: ${txt}`))
-            }
-            end(null, json)
-          }
-        })
-        signal.addEventListener('abort', onAbort)
-        function onAbort () {
-          end(new Error('Aborted.'))
-          p.kill()
-        }
-      })
+    serverOpts: {
+      udp: addresses.udp.port,
+      tcp: addresses.tcp.port,
+      doh: addresses.doh.port
     },
     close: () => server.close()
+  }
+}
+
+async function getCommand (cmd, serverOpts, signal) {
+  const executable = await getExecutable(cmd.shift())
+  return function (domain, options) {
+    return new Promise((resolve, reject) => {
+      if (signal.aborted) {
+        reject(Error('Aborted.'))
+      }
+      const end = (err, data) => {
+        signal.removeEventListener('abort', onAbort)
+        if (err) {
+          reject(err)
+        } else {
+          resolve(data)
+        }
+      }
+      const out = []
+      const err = []
+      const p = spawn(executable, [...cmd, ...toTestArgs(domain, options, serverOpts)])
+      p.on('error', end)
+      p.stdout.on('data', data => out.push(data))
+      p.stderr.on('data', data => err.push(data))
+      p.on('close', code => {
+        if (code) {
+          end(new Error(`Process Error [${code}]: ${Buffer.concat(err).toString()}`))
+        } else {
+          let json
+          const txt = Buffer.concat(out).toString()
+          try {
+            json = JSON.parse(txt)
+          } catch (error) {
+            end(new Error(`Non-JSON output: ${error}: ${txt}`))
+          }
+          end(null, json)
+        }
+      })
+      signal.addEventListener('abort', onAbort)
+      function onAbort () {
+        end(new Error('Aborted.'))
+        p.kill()
+      }
+    })
   }
 }
 
@@ -187,6 +188,7 @@ function excludeLog (obj) {
 
 module.exports = {
   getCommand,
+  startServer,
   runTests,
   tests
 }
