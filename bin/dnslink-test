@@ -67,28 +67,30 @@ const AbortController = require('abort-controller')
   )
 
 function showHelp () {
-  console.log(`dnslink-test [--help] [--version] [-e <flag>] -- <command>
+  console.log(`dnslink-test - Test dnslink implementations
 
-Usage:
+USAGE
+    dnslink-test [--help] [--version] [-e <flag>] [--exit-early] \\
+        [--server-only] -- <command>
 
-dnslink-test -- my-impl          Run the "my-impl" command against a series of
-                                 tests
-dnslink-test -e log -- my-impl   Run the "my-impl" command against a series
-                                 of tests with log support
+EXAMPLE
+    # Run the "my-impl" command against a series of tests
+    > dnslink-test -- my-impl
+    
+    # Run the "my-impl" command against a series of tests with log support
+    > dnslink-test -e log -- my-impl   
 
-Options:
+OPTIONS
+    --help, -h, help             Show this help
+    --version, -v                Show the version of this command
+    --enable=<flag>, -e <flag>   Enable a flag
+    --exit-early, --early        Exit the when the first test fails
+    --server-only                Start the test DNS server without running
+                                 the tests
 
---help, -h, help             Show this help
---version, -v                Show the version of this command
---enable=<flag>, -e <flag>   Enable a flag
---exit-early, --early        Exit the when the first test fails
---server-only                Start the test DNS server without running the
-                             tests
-
-Flags:
-
---enable=log   Test if the implementation supports log messages
---enable=eth   Test if the implementation supports .eth domains
+FLAGS
+    --enable=log   Test if the implementation supports log messages
+    --enable=eth   Test if the implementation supports .eth domains
 
 Read more about it here: ${homepage}
 
