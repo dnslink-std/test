@@ -22,11 +22,17 @@ const AbortController = require('abort-controller')
       showVersion()
       return 0
     }
+    const exitEarly = args.includes('--early') || args.includes('--exit-early')
     const { cmd, close } = await getCommand(cmdParts, signal)
     try {
       const harness = runTests(cmd, flags)
       let exit = 0
-      harness.onFailure(() => { exit = 1 })
+      harness.onFailure(() => {
+        exit = 1
+        if (exitEarly) {
+          setImmediate(() => process.exit(1))
+        }
+      })
       const stream = harness.createStream({ objectMode: false })
       for await (const line of stream) {
         if (signal.aborted) {
@@ -69,6 +75,7 @@ Options:
 --help, -h, help             Show this help
 --version, -v                Show the version of this command
 --enable=<flag>, -e <flag>   Enable a flag
+--exit-early, --early        Exit the when the first test fails
 
 Flags:
 
