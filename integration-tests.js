@@ -1,6 +1,8 @@
 module.exports = {
   't01: A domain without a dnslink-entry, should return empty.': {
-    dns () {},
+    dns: domain => ({
+      [domain]: ['txtentry=now']
+    }),
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
         links: {},
