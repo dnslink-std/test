@@ -16,4 +16,4 @@ jobs:
     - run: npm i
     - run: ./dnsimple-update-script.js
       env:
-        DNSIMPLE_ACCESS_TOKEN: ${{ secrets.DNSIMPLE_ACCESS_TOKEN }}
+        DNSIMPLE_ACCESS_TOKEN: ${{ secrets.DNSIMPLE_TOKEN }}
