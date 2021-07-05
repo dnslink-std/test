@@ -20,7 +20,7 @@ module.exports = {
     }),
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
-        links: { ipfs: 'ABCD' },
+        links: { ipfs: [{ value: 'ABCD', ttl: 100 }] },
         path: [],
         log: [
           { code: 'REDIRECT', domain: `_dnslink.${domain}` },
@@ -36,7 +36,7 @@ module.exports = {
     }),
     async run (t, cmd, domain) {
       const result = {
-        links: { ipfs: 'EFGH' },
+        links: { ipfs: [{ value: 'EFGH', ttl: 100 }] },
         path: [],
         log: [{ code: 'RESOLVE', domain: `_dnslink.${domain}` }]
       }
@@ -49,11 +49,11 @@ module.exports = {
       [domain]: ['dnslink=/ipfs/efgh'],
       [`_dnslink.${domain}`]: ['dnslink=/ipfs/IJKL'],
       [`_dnslink._dnslink.${domain}`]: ['dnslink=/ipfs/ijkl'],
-      [`_dnslink._dnslink._dnslink.${domain}`]: ['dnslink=/ipfs/ijkl']
+      [`_dnslink._dnslink._dnslink.${domain}`]: ['dnslink=/ipfs/mnop']
     }),
     async run (t, cmd, domain) {
       const result = {
-        links: { ipfs: 'IJKL' },
+        links: { ipfs: [{ value: 'IJKL', ttl: 100 }] },
         path: [],
         log: [{ code: 'RESOLVE', domain: `_dnslink.${domain}` }]
       }
@@ -72,7 +72,7 @@ module.exports = {
     }),
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
-        links: { ipfs: 'MNOP' },
+        links: { ipfs: [{ value: 'MNOP', ttl: 100 }] },
         path: [],
         log: [
           { code: 'INVALID_ENTRY', entry: 'dnslink=/ipfs/', reason: 'NO_VALUE' },
@@ -88,12 +88,16 @@ module.exports = {
     }),
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
-        links: { ipfs: 'QRST' },
+        links: {
+          ipfs: [
+            { value: 'QRST', ttl: 100 },
+            { value: 'UVWX', ttl: 100 },
+            { value: 'Z123', ttl: 100 }
+          ]
+        },
         path: [],
         log: [
           { code: 'REDIRECT', domain: `_dnslink.${domain}` },
-          { code: 'CONFLICT_ENTRY', entry: 'dnslink=/ipfs/Z123' },
-          { code: 'CONFLICT_ENTRY', entry: 'dnslink=/ipfs/ UVWX' },
           { code: 'RESOLVE', domain }
         ]
       })
@@ -105,7 +109,11 @@ module.exports = {
     }),
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
-        links: { ipfs: '4567', ipns: '890A', hyper: 'AABC' },
+        links: {
+          ipfs: [{ value: '4567', ttl: 100 }],
+          ipns: [{ value: '890A', ttl: 100 }],
+          hyper: [{ value: 'AABC', ttl: 100 }]
+        },
         path: [],
         log: [
           { code: 'REDIRECT', domain: `_dnslink.${domain}` },
@@ -127,7 +135,7 @@ module.exports = {
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
         links: {
-          foo: 'bar'
+          foo: [{ value: 'bar', ttl: 100 }]
         },
         path: [],
         log: [
@@ -148,7 +156,7 @@ module.exports = {
     }),
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
-        links: { ipfs: 'AADE' },
+        links: { ipfs: [{ value: 'AADE', ttl: 100 }] },
         path: [],
         log: [
           { code: 'REDIRECT', domain: `_dnslink.${domain}` },
@@ -194,7 +202,7 @@ module.exports = {
     }),
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
-        links: { ipfs: 'AAFG' },
+        links: { ipfs: [{ value: 'AAFG', ttl: 100 }] },
         path: [
           { pathname: '/first-path%20', search: { ' goo': ['dom '] } },
           { pathname: '/inbetween-path/moo-x%20abcd-foo', search: { foo: ['baz'] } },
@@ -342,7 +350,7 @@ module.exports = {
     }),
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
-        links: { ipfs: 'AAJK' },
+        links: { ipfs: [{ value: 'AAJK', ttl: 100 }] },
         path: [],
         log: [
           { code: 'RESOLVE', domain: `_dnslink.${domain}` }
@@ -357,7 +365,7 @@ module.exports = {
     }),
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
-        links: { ipns: 'AALM' },
+        links: { ipns: [{ value: 'AALM', ttl: 100 }] },
         path: [],
         log: [
           { code: 'REDIRECT', domain: `_dnslink.${domain}` },
@@ -378,7 +386,7 @@ module.exports = {
     }),
     async run (t, cmd, domain) {
       t.dnslink(await cmd(`${domain}/test-path?foo=bar&foo=baz&goo=ey`), {
-        links: { ipns: 'AANO' },
+        links: { ipns: [{ value: 'AANO', ttl: 100 }] },
         path: [{ pathname: '/test-path', search: { foo: ['bar', 'baz'], goo: ['ey'] } }],
         log: [
           { code: 'REDIRECT', domain: `_dnslink.${domain}`, pathname: '/test-path', search: { foo: ['bar', 'baz'], goo: ['ey'] } },

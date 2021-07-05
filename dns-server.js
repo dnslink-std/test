@@ -21,7 +21,7 @@ module.exports = async function createServer (entries) {
             name,
             type,
             class: clazz || Packet.CLASS.IN,
-            ttl: 300,
+            ttl: 100,
             ...data
           }
         })

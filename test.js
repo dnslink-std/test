@@ -25,7 +25,7 @@ function getResult (options) {
       return result
     case 't02.dnslink.dev':
       return {
-        links: { ipfs: 'ABCD' },
+        links: { ipfs: [{ value: 'ABCD', ttl: 100 }] },
         path: [],
         log: [
           { code: 'REDIRECT', domain: '_dnslink.t02.dnslink.dev' },
@@ -35,14 +35,14 @@ function getResult (options) {
     case 't03.dnslink.dev':
     case '_dnslink.t03.dnslink.dev':
       return {
-        links: { ipfs: 'EFGH' },
+        links: { ipfs: [{ value: 'EFGH', ttl: 100 }] },
         path: [],
         log: [{ code: 'RESOLVE', domain: '_dnslink.t03.dnslink.dev' }]
       }
     case 't04.dnslink.dev':
     case '_dnslink.t04.dnslink.dev':
       return {
-        links: { ipfs: 'IJKL' },
+        links: { ipfs: [{ value: 'IJKL', ttl: 100 }] },
         path: [],
         log: [{
           code: 'RESOLVE', domain: '_dnslink.t04.dnslink.dev'
@@ -56,7 +56,7 @@ function getResult (options) {
       }
     case 't05.dnslink.dev':
       return {
-        links: { ipfs: 'MNOP' },
+        links: { ipfs: [{ value: 'MNOP', ttl: 100 }] },
         path: [],
         log: [
           { code: 'INVALID_ENTRY', entry: 'dnslink=/ipfs/', reason: 'NO_VALUE' },
@@ -66,18 +66,26 @@ function getResult (options) {
       }
     case 't06.dnslink.dev':
       return {
-        links: { ipfs: 'QRST' },
+        links: {
+          ipfs: [
+            { value: 'QRST', ttl: 100 },
+            { value: 'UVWX', ttl: 100 },
+            { value: 'Z123', ttl: 100 }
+          ]
+        },
         path: [],
         log: [
           { code: 'REDIRECT', domain: '_dnslink.t06.dnslink.dev' },
-          { code: 'CONFLICT_ENTRY', entry: 'dnslink=/ipfs/Z123' },
-          { code: 'CONFLICT_ENTRY', entry: 'dnslink=/ipfs/ UVWX' },
           { code: 'RESOLVE', domain: 't06.dnslink.dev' }
         ]
       }
     case 't07.dnslink.dev':
       return {
-        links: { ipfs: '4567', ipns: '890A', hyper: 'AABC' },
+        links: {
+          ipfs: [{ value: '4567', ttl: 100 }],
+          ipns: [{ value: '890A', ttl: 100 }],
+          hyper: [{ value: 'AABC', ttl: 100 }]
+        },
         path: [],
         log: [
           { code: 'REDIRECT', domain: '_dnslink.t07.dnslink.dev' },
@@ -86,7 +94,7 @@ function getResult (options) {
       }
     case 't08.dnslink.dev':
       return {
-        links: { foo: 'bar' },
+        links: { foo: [{ value: 'bar', ttl: 100 }] },
         path: [],
         log: [
           { code: 'REDIRECT', domain: '_dnslink.t08.dnslink.dev' },
@@ -100,7 +108,7 @@ function getResult (options) {
       }
     case 't09.dnslink.dev':
       return {
-        links: { ipfs: 'AADE' },
+        links: { ipfs: [{ value: 'AADE', ttl: 100 }] },
         path: [],
         log: [
           { code: 'REDIRECT', domain: '_dnslink.t09.dnslink.dev' },
@@ -109,7 +117,7 @@ function getResult (options) {
       }
     case 't10.dnslink.dev':
       return {
-        links: { ipfs: 'AAFG' },
+        links: { ipfs: [{ value: 'AAFG', ttl: 100 }] },
         path: [
           { pathname: '/first-path%20', search: { ' goo': ['dom '] } },
           { pathname: '/inbetween-path/moo-x%20abcd-foo', search: { foo: ['baz'] } },
@@ -203,7 +211,7 @@ function getResult (options) {
       }
     case 't13.dnslink.eth':
       return {
-        links: { ipfs: 'AAJK' },
+        links: { ipfs: [{ value: 'AAJK', ttl: 100 }] },
         path: [],
         log: [
           { code: 'RESOLVE', domain: `_dnslink.${domain}` }
@@ -211,7 +219,7 @@ function getResult (options) {
       }
     case 't14.dnslink.dev':
       return {
-        links: { ipns: 'AALM' },
+        links: { ipns: [{ value: 'AALM', ttl: 100 }] },
         path: [],
         log: [
           { code: 'REDIRECT', domain: `_dnslink.${domain}` },
@@ -225,7 +233,7 @@ function getResult (options) {
       // eslint-disable-next-line
       const hostname = 't15.dnslink.dev'
       return {
-        links: { ipns: 'AANO' },
+        links: { ipns: [{ value: 'AANO', ttl: 100 }] },
         path: [
           { pathname: '/test-path', search: { foo: ['bar', 'baz'], goo: ['ey'] } }
         ],

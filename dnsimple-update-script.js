@@ -57,7 +57,7 @@ const util = require('util')
   for (const [name, domainEntries] of Object.entries(txtEntries)) {
     for (const content of domainEntries) {
       const log = `${name}${suffix} TXT ${content}`
-      const entry = { name, type: 'TXT', content }
+      const entry = { name, type: 'TXT', content, ttl: 100 }
       operations.push(async () => {
         try {
           await client.zones.createZoneRecord(account.id, zone.id, entry)
