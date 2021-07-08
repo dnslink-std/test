@@ -405,5 +405,25 @@ module.exports = {
         ]
       })
     }
+  },
+  't16: invalid and ignored redirects': {
+    dns: domain => ({
+      [`_dnslink.${domain}`]: [`dnslink=/dns/1.${domain}`, `dnslink=/dns/2.${domain}`],
+      [`_dnslink.1.${domain}`]: ['dnslink=/dns/3 3', `dnslink=/dns/3.${domain}`],
+      [`_dnslink.3.${domain}`]: ['dnslink=/ipns/AAPQ']
+    }),
+    async run (t, cmd, domain) {
+      t.dnslink(await cmd(`${domain}`), {
+        links: { ipns: [{ value: 'AAPQ', ttl: 100 }] },
+        path: [],
+        log: [
+          { code: 'UNUSED_ENTRY', entry: `dnslink=/dns/2.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.${domain}` },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/3 3' },
+          { code: 'REDIRECT', domain: `_dnslink.1.${domain}` },
+          { code: 'RESOLVE', domain: `_dnslink.3.${domain}` }
+        ]
+      })
+    }
   }
 }

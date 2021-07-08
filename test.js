@@ -251,6 +251,18 @@ function getResult (options) {
           { code: 'RESOLVE', domain: `3.${hostname}` }
         ]
       }
+    case 't16.dnslink.dev':
+      return {
+        links: { ipns: [{ value: 'AAPQ', ttl: 100 }] },
+        path: [],
+        log: [
+          { code: 'UNUSED_ENTRY', entry: 'dnslink=/dns/2.t16.dnslink.dev' },
+          { code: 'REDIRECT', domain: '_dnslink.t16.dnslink.dev' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/3 3' },
+          { code: 'REDIRECT', domain: '_dnslink.1.t16.dnslink.dev' },
+          { code: 'RESOLVE', domain: '_dnslink.3.t16.dnslink.dev' }
+        ]
+      }
   }
   return {
     error: `unexpected domain ${domain}`
