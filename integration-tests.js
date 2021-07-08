@@ -425,5 +425,134 @@ module.exports = {
         ]
       })
     }
+  },
+  't17: fqdn edge case matching': {
+    dns: domain => ({
+      // Tests sourced via:
+      // Validator: https://github.com/validatorjs/validator.js/blob/907bb07b8d6be7d159791645960eb5f5017a99b6/test/validators.js#L1009-L1031
+      // isFQDN: https://github.com/parro-it/is-fqdn/blob/22cfb52d6c256f2862bb8ac5960a823410b93634/test.mjs#L22-L41
+      // Apache Commons Validator: https://gitbox.apache.org/repos/asf?p=commons-validator.git;a=blob;f=src/test/java/org/apache/commons/validator/routines/UrlValidatorTest.java;h=557945680a6fc2e86ac1bf19ae8193aac65e90f1;hb=HEAD
+      [`_dnslink.${domain}`]: [
+        // ↓ Invalid redirects
+        'dnslink=/dns/.',
+        'dnslink=/dns/cool.foo..foo/bar',
+        'dnslink=/dns/./foo',
+        'dnslink=/dns/abc',
+        'dnslink=/dns/abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz01.com',
+        'dnslink=/dns/_.com',
+        'dnslink=/dns/*.some.com',
+        'dnslink=/dns/s!ome.com',
+        'dnslink=/dns//more.com',
+        'dnslink=/dns/domain.com�',
+        'dnslink=/dns/domain.com©',
+        'dnslink=/dns/example.0',
+        'dnslink=/dns/127.0.0.1',
+        'dnslink=/dns/256.0.0.0',
+        'dnslink=/dns/192.168.0.9999',
+        'dnslink=/dns/192.168.0',
+        'dnslink=/dns/123',
+        'dnslink=/dns/日本語.jp',
+        'dnslink=/dns/foo--bar',
+        'dnslink=/dns/b\u00fccher',
+        'dnslink=/dns/\uFFFD',
+        'dnslink=/dns/президент.рф',
+        'dnslink=/ipfs/AARS'
+      ],
+      [`_dnslink.1.${domain}`]: [
+        `dnslink=/dns/xn--froschgrn-x9a.${domain}`,
+        'dnslink=/ipfs/aaab'
+      ],
+      [`_dnslink.xn--froschgrn-x9a.${domain}`]: [
+        'dnslink=/ipfs/AAVW'
+      ],
+      [`_dnslink.2.${domain}`]: [
+        `dnslink=/dns/1337.${domain}`,
+        'dnslink=/ipfs/aaij'
+      ],
+      [`_dnslink.1337.${domain}`]: [
+        'dnslink=/ipfs/BAEF'
+      ],
+      [`_dnslink.3.${domain}`]: [
+        `dnslink=/dns/abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0.${domain}`,
+        'dnslink=/ipfs/aakl'
+      ],
+      [`_dnslink.abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0.${domain}`]: [
+        'dnslink=/ipfs/BAGH'
+      ],
+      [`_dnslink.4.${domain}`]: [
+        `dnslink=/dns/4b.${domain}.`,
+        'dnslink=/ipfs/aamn'
+      ],
+      [`_dnslink.4b.${domain}`]: [
+        'dnslink=/ipfs/BAIJ'
+      ]
+    }),
+    async run (t, cmd, domain) {
+      t.dnslink(await cmd(domain), {
+        links: { ipfs: [{ value: 'AARS', ttl: 100 }] },
+        path: [],
+        log: [
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/.' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/cool.foo..foo/bar' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/./foo' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/abc' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz01.com' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/127.0.0.1' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/256.0.0.0' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/_.com' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/*.some.com' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/s!ome.com' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns//more.com' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/domain.com�' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/domain.com©' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/example.0' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/192.168.0.9999' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/192.168.0' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/123' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/日本語.jp' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/foo--bar' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/b\u00fccher' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/\uFFFD' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/президент.рф' },
+          { code: 'RESOLVE', domain: `_dnslink.${domain}` }
+        ]
+      })
+      t.dnslink(await cmd(`1.${domain}`), {
+        links: { ipfs: [{ value: 'AAVW', ttl: 100 }] },
+        path: [],
+        log: [
+          { code: 'UNUSED_ENTRY', entry: 'dnslink=/ipfs/aaab' },
+          { code: 'REDIRECT', domain: `_dnslink.1.${domain}` },
+          { code: 'RESOLVE', domain: `_dnslink.xn--froschgrn-x9a.${domain}` }
+        ]
+      })
+      t.dnslink(await cmd(`2.${domain}`), {
+        links: { ipfs: [{ value: 'BAEF', ttl: 100 }] },
+        path: [],
+        log: [
+          { code: 'UNUSED_ENTRY', entry: 'dnslink=/ipfs/aaij' },
+          { code: 'REDIRECT', domain: `_dnslink.2.${domain}` },
+          { code: 'RESOLVE', domain: `_dnslink.1337.${domain}` }
+        ]
+      })
+      t.dnslink(await cmd(`3.${domain}`), {
+        links: { ipfs: [{ value: 'BAGH', ttl: 100 }] },
+        path: [],
+        log: [
+          { code: 'UNUSED_ENTRY', entry: 'dnslink=/ipfs/aakl' },
+          { code: 'REDIRECT', domain: `_dnslink.3.${domain}` },
+          { code: 'RESOLVE', domain: `_dnslink.abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0.${domain}` }
+        ]
+      })
+      t.dnslink(await cmd(`4.${domain}`), {
+        links: { ipfs: [{ value: 'BAIJ', ttl: 100 }] },
+        path: [],
+        log: [
+          { code: 'UNUSED_ENTRY', entry: 'dnslink=/ipfs/aamn' },
+          { code: 'REDIRECT', domain: `_dnslink.4.${domain}` },
+          { code: 'RESOLVE', domain: `_dnslink.4b.${domain}` }
+        ]
+      })
+    }
   }
 }

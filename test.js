@@ -263,6 +263,77 @@ function getResult (options) {
           { code: 'RESOLVE', domain: '_dnslink.3.t16.dnslink.dev' }
         ]
       }
+    case 't17.dnslink.dev':
+      return {
+        links: { ipfs: [{ value: 'AARS', ttl: 100 }] },
+        path: [],
+        log: [
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/.' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/cool.foo..foo/bar' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/./foo' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/abc' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz01.com' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/127.0.0.1' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/256.0.0.0' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/_.com' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/*.some.com' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/s!ome.com' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns//more.com' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/domain.com�' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/domain.com©' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/example.0' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/192.168.0.9999' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/192.168.0' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/123' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/日本語.jp' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/foo--bar' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/bücher' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/�' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/президент.рф' },
+          { code: 'RESOLVE', domain: '_dnslink.t17.dnslink.dev' }
+        ]
+      }
+    case '1.t17.dnslink.dev':
+      return {
+        links: { ipfs: [{ value: 'AAVW', ttl: 100 }] },
+        path: [],
+        log: [
+          { code: 'UNUSED_ENTRY', entry: 'dnslink=/ipfs/aaab' },
+          { code: 'REDIRECT', domain: '_dnslink.1.t17.dnslink.dev' },
+          { code: 'RESOLVE', domain: '_dnslink.xn--froschgrn-x9a.t17.dnslink.dev' }
+        ]
+      }
+    case '2.t17.dnslink.dev':
+      return {
+        links: { ipfs: [{ value: 'BAEF', ttl: 100 }] },
+        path: [],
+        log: [
+          { code: 'UNUSED_ENTRY', entry: 'dnslink=/ipfs/aaij' },
+          { code: 'REDIRECT', domain: '_dnslink.2.t17.dnslink.dev' },
+          { code: 'RESOLVE', domain: '_dnslink.1337.t17.dnslink.dev' }
+        ]
+      }
+    case '3.t17.dnslink.dev':
+      return {
+        links: { ipfs: [{ value: 'BAGH', ttl: 100 }] },
+        path: [],
+        log: [
+          { code: 'UNUSED_ENTRY', entry: 'dnslink=/ipfs/aakl' },
+          { code: 'REDIRECT', domain: '_dnslink.3.t17.dnslink.dev' },
+          { code: 'RESOLVE', domain: '_dnslink.abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0.t17.dnslink.dev' }
+        ]
+      }
+    case '4.t17.dnslink.dev':
+    case '4.t17.dnslink.dev.':
+      return {
+        links: { ipfs: [{ value: 'BAIJ', ttl: 100 }] },
+        path: [],
+        log: [
+          { code: 'UNUSED_ENTRY', entry: 'dnslink=/ipfs/aamn' },
+          { code: 'REDIRECT', domain: '_dnslink.4.t17.dnslink.dev' },
+          { code: 'RESOLVE', domain: '_dnslink.4b.t17.dnslink.dev' }
+        ]
+      }
   }
   return {
     error: `unexpected domain ${domain}`
