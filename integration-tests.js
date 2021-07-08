@@ -553,6 +553,15 @@ module.exports = {
           { code: 'RESOLVE', domain: `_dnslink.4b.${domain}` }
         ]
       })
+      t.dnslink(await cmd(`4.${domain}.`), {
+        links: { ipfs: [{ value: 'BAIJ', ttl: 100 }] },
+        path: [],
+        log: [
+          { code: 'UNUSED_ENTRY', entry: 'dnslink=/ipfs/aamn' },
+          { code: 'REDIRECT', domain: `_dnslink.4.${domain}` },
+          { code: 'RESOLVE', domain: `_dnslink.4b.${domain}` }
+        ]
+      })
     }
   }
 }
