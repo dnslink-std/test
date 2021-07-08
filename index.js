@@ -148,6 +148,14 @@ function runTests (cmd, flags = {}, filter = {}) {
           t.fail('Result is empty')
           return
         }
+        if (expected.error) {
+          if (!actual.error) {
+            t.fail(`Missing error ${expected.error.code}: ${JSON.stringify(actual)}`)
+          } else {
+            t.equals(actual.error.code, expected.error.code, `Expected error ${actual.error.code} == ${expected.error.code} of ${JSON.stringify(actual.error)}`)
+          }
+          return
+        }
         t.deepEquals(excludeLog(actual), excludeLog(expected))
         if (flags.log && expected.log) {
           let log = []

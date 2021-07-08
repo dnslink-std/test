@@ -60,9 +60,9 @@ module.exports = {
       t.dnslink(await cmd(domain), result)
       t.dnslink(await cmd(`_dnslink.${domain}`), result)
       t.dnslink(await cmd(`_dnslink._dnslink.${domain}`), {
-        links: {},
-        path: [],
-        log: [{ code: 'RECURSIVE_DNSLINK_PREFIX', domain: `_dnslink._dnslink.${domain}` }]
+        error: {
+          code: 'RECURSIVE_DNSLINK_PREFIX'
+        }
       })
     }
   },

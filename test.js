@@ -50,9 +50,7 @@ function getResult (options) {
       }
     case '_dnslink._dnslink.t04.dnslink.dev':
       return {
-        links: {},
-        path: [],
-        log: [{ code: 'RECURSIVE_DNSLINK_PREFIX', domain: '_dnslink._dnslink.t04.dnslink.dev' }]
+        error: { code: 'RECURSIVE_DNSLINK_PREFIX' }
       }
     case 't05.dnslink.dev':
       return {
