@@ -24,6 +24,8 @@ To use this harness you need to prepare an executable, lets call it `my-impl`.
 6. Optionally, your implementation may support standard log messages and/or codes for debugging why a dnslink entry
     can not found. To enable this you need to also return a `log` object that contains all the log entries and run
     the tests with the `--enable log` flag: `$ dnslink-test --enable log -- my-impl`.
+7. While developing you can use `--skip` or `--only` to disable/enable specific tests in order to make development
+    more comfortable.
 
 The list of rules that an implementation needs to cover is defined in [`./integration-tests.js`](./integration-tests.js).
 

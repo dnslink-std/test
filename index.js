@@ -111,7 +111,7 @@ function getExecutable (input) {
     ))
 }
 
-function runTests (cmd, flags = {}) {
+function runTests (cmd, flags = {}, filter = {}) {
   const test = tape.createHarness()
   const _cmd = (domain, options) => cmd(domain, {
     flags,
@@ -129,11 +129,18 @@ function runTests (cmd, flags = {}) {
     t.end()
   })
   Object.entries(tests).forEach(([name, { run, targetDomain, flag }]) => {
-    test(`${name} (${targetDomain})`, async t => {
-      if (flag && !flags[flag]) {
-        t.pass(`Skipped. Enable "${flag}" flag for this test to run.`)
-        return
-      }
+    const key = /^(t\d.)?\s?/.exec(name)[1]
+    let skip
+    if (flag && !flags[flag]) {
+      skip = ` (Enable "${flag}" flag for this test to run.)`
+    } else if (filter.only && !filter.only.includes(key)) {
+      skip = ' (Disabled by --only)'
+    } else if (filter.skip && filter.skip.includes(key)) {
+      skip = ' (Disabled by --skip)'
+    }
+    test(`${name} (${targetDomain})${skip || ''}`, {
+      skip: skip !== undefined
+    }, async t => {
       t.dnslink = dnslink
       await run(t, _cmd, targetDomain)
       function dnslink (actual, expected) {

@@ -15,6 +15,6 @@ startServer()
 
 getCommand(['hello'], c.signal)
   .then(cmd => {
-    const tests = runTests (cmd, { error: false });
+    const tests = runTests (cmd, { error: false }, { only: ['t01'], skip: ['t10'] });
     tests.onFinish(() => {});
   });

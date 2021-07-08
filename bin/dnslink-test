@@ -31,7 +31,8 @@ const AbortController = require('abort-controller')
         return await new Promise(resolve => signal.addEventListener('abort', resolve))
       }
       const cmd = await getCommand(cmdParts, serverOpts, signal)
-      const harness = runTests(cmd, flags)
+      const filter = getFilter(args)
+      const harness = runTests(cmd, flags, filter)
       let exit = 0
       harness.onFailure(() => {
         exit = 1
@@ -71,14 +72,20 @@ function showHelp () {
 
 USAGE
     dnslink-test [--help] [--version] [-e <flag>] [--exit-early] \\
-        [--server-only] -- <command>
+        [--server-only] [--skip=<test-id>] [--only=<test-id>] -- <command>
 
 EXAMPLE
     # Run the "my-impl" command against a series of tests
     > dnslink-test -- my-impl
     
     # Run the "my-impl" command against a series of tests with log support
-    > dnslink-test -e log -- my-impl   
+    > dnslink-test -e log -- my-impl
+
+    # Run only the tests t02 and t10
+    > dnslink-test --only=t02 --only=t10 -- my-impl
+
+    # Skipping test t04 and t05
+    > dnslink-test --skip=t04 --skip=t05 -- my-impl
 
 OPTIONS
     --help, -h, help             Show this help
@@ -87,6 +94,8 @@ OPTIONS
     --exit-early, --early        Exit the when the first test fails
     --server-only                Start the test DNS server without running
                                  the tests
+    --skip=<test-id>             Skips one particular test, only for dev-use
+    --only=<test-id>             Enables one particular test, only for dev-use
 
 FLAGS
     --enable=log   Test if the implementation supports log messages
@@ -96,6 +105,33 @@ Read more about it here: ${homepage}
 
 dnslink-test@${version}
 `)
+}
+
+function getFilter (args) {
+  const filter = {}
+  for (const arg of args) {
+    const parts = /^(--(skip|only))=(.+)$/.exec(arg)
+    if (parts) {
+      const type = parts[2]
+      const test = parts[3]
+      if (type === 'skip') {
+        const skip = filter.skip
+        if (skip) {
+          skip.push(test)
+        } else {
+          filter.skip = [test]
+        }
+      } else {
+        const only = filter.only
+        if (only) {
+          only.push(test)
+        } else {
+          filter.only = [test]
+        }
+      }
+    }
+  }
+  return filter
 }
 
 function getFlags (args) {
