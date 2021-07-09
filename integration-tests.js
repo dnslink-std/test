@@ -149,9 +149,9 @@ module.exports = {
       })
     }
   },
-  't09: Simple /dns/ prefixed redirect.': {
+  't09: Simple /dnslink/ prefixed redirect.': {
     dns: domain => ({
-      [`_dnslink.${domain}`]: [`dnslink=/dns/b.${domain}`],
+      [`_dnslink.${domain}`]: [`dnslink=/dnslink/b.${domain}`],
       [`_dnslink.b.${domain}`]: ['dnslink=/ipfs/AADE']
     }),
     async run (t, cmd, domain) {
@@ -167,37 +167,37 @@ module.exports = {
   },
   't10: 32 redirects are expected to work.': {
     dns: domain => ({
-      [`_dnslink.${domain}`]: [`dnslink=/dns/2.${domain}/last-path?foo=bar&foo=bak`],
-      [`_dnslink.2.${domain}`]: [`dnslink=/dns/_dnslink.3.${domain}`],
-      [`_dnslink.3.${domain}`]: [`dnslink=/dns/4.${domain}`],
-      [`_dnslink.4.${domain}`]: [`dnslink=/dns/5.${domain}`],
-      [`_dnslink.5.${domain}`]: [`dnslink=/dns/6.${domain}`],
-      [`_dnslink.6.${domain}`]: [`dnslink=/dns/7.${domain}`],
-      [`_dnslink.7.${domain}`]: [`dnslink=/dns/8.${domain}`],
-      [`_dnslink.8.${domain}`]: [`dnslink=/dns/9.${domain}`],
-      [`_dnslink.9.${domain}`]: [`dnslink=/dns/10.${domain}`],
-      [`_dnslink.10.${domain}`]: [`dnslink=/dns/11.${domain}`],
-      [`_dnslink.11.${domain}`]: [`dnslink=/dns/12.${domain}`],
-      [`_dnslink.12.${domain}`]: [`dnslink=/dns/13.${domain}`],
-      [`_dnslink.13.${domain}`]: [`dnslink=/dns/14.${domain}`],
-      [`_dnslink.14.${domain}`]: [`dnslink=/dns/15.${domain}`],
-      [`_dnslink.15.${domain}`]: [`dnslink=/dns/16.${domain}`],
-      [`_dnslink.16.${domain}`]: [`dnslink=/dns/17.${domain}`],
-      [`_dnslink.17.${domain}`]: [`dnslink=/dns/18.${domain}/inbetween-path/moo-x abcd-foo?foo=baz`],
-      [`_dnslink.18.${domain}`]: [`dnslink=/dns/19.${domain}`],
-      [`_dnslink.19.${domain}`]: [`dnslink=/dns/20.${domain}`],
-      [`_dnslink.20.${domain}`]: [`dnslink=/dns/21.${domain}`],
-      [`_dnslink.21.${domain}`]: [`dnslink=/dns/22.${domain}`],
-      [`_dnslink.22.${domain}`]: [`dnslink=/dns/23.${domain}`],
-      [`_dnslink.23.${domain}`]: [`dnslink=/dns/24.${domain}`],
-      [`_dnslink.24.${domain}`]: [`dnslink=/dns/25.${domain}`],
-      [`_dnslink.25.${domain}`]: [`dnslink=/dns/26.${domain}`],
-      [`_dnslink.26.${domain}`]: [`dnslink=/dns/27.${domain}`],
-      [`_dnslink.27.${domain}`]: [`dnslink=/dns/28.${domain}`],
-      [`_dnslink.28.${domain}`]: [`dnslink=/dns/29.${domain}`],
-      [`_dnslink.29.${domain}`]: [`dnslink=/dns/30.${domain}`],
-      [`_dnslink.30.${domain}`]: [`dnslink=/dns/31.${domain}`],
-      [`_dnslink.31.${domain}`]: [`dnslink=/dns/32.${domain}/first-path ? goo=dom &# ha `],
+      [`_dnslink.${domain}`]: [`dnslink=/dnslink/2.${domain}/last-path?foo=bar&foo=bak`],
+      [`_dnslink.2.${domain}`]: [`dnslink=/dnslink/_dnslink.3.${domain}`],
+      [`_dnslink.3.${domain}`]: [`dnslink=/dnslink/4.${domain}`],
+      [`_dnslink.4.${domain}`]: [`dnslink=/dnslink/5.${domain}`],
+      [`_dnslink.5.${domain}`]: [`dnslink=/dnslink/6.${domain}`],
+      [`_dnslink.6.${domain}`]: [`dnslink=/dnslink/7.${domain}`],
+      [`_dnslink.7.${domain}`]: [`dnslink=/dnslink/8.${domain}`],
+      [`_dnslink.8.${domain}`]: [`dnslink=/dnslink/9.${domain}`],
+      [`_dnslink.9.${domain}`]: [`dnslink=/dnslink/10.${domain}`],
+      [`_dnslink.10.${domain}`]: [`dnslink=/dnslink/11.${domain}`],
+      [`_dnslink.11.${domain}`]: [`dnslink=/dnslink/12.${domain}`],
+      [`_dnslink.12.${domain}`]: [`dnslink=/dnslink/13.${domain}`],
+      [`_dnslink.13.${domain}`]: [`dnslink=/dnslink/14.${domain}`],
+      [`_dnslink.14.${domain}`]: [`dnslink=/dnslink/15.${domain}`],
+      [`_dnslink.15.${domain}`]: [`dnslink=/dnslink/16.${domain}`],
+      [`_dnslink.16.${domain}`]: [`dnslink=/dnslink/17.${domain}`],
+      [`_dnslink.17.${domain}`]: [`dnslink=/dnslink/18.${domain}/inbetween-path/moo-x abcd-foo?foo=baz`],
+      [`_dnslink.18.${domain}`]: [`dnslink=/dnslink/19.${domain}`],
+      [`_dnslink.19.${domain}`]: [`dnslink=/dnslink/20.${domain}`],
+      [`_dnslink.20.${domain}`]: [`dnslink=/dnslink/21.${domain}`],
+      [`_dnslink.21.${domain}`]: [`dnslink=/dnslink/22.${domain}`],
+      [`_dnslink.22.${domain}`]: [`dnslink=/dnslink/23.${domain}`],
+      [`_dnslink.23.${domain}`]: [`dnslink=/dnslink/24.${domain}`],
+      [`_dnslink.24.${domain}`]: [`dnslink=/dnslink/25.${domain}`],
+      [`_dnslink.25.${domain}`]: [`dnslink=/dnslink/26.${domain}`],
+      [`_dnslink.26.${domain}`]: [`dnslink=/dnslink/27.${domain}`],
+      [`_dnslink.27.${domain}`]: [`dnslink=/dnslink/28.${domain}`],
+      [`_dnslink.28.${domain}`]: [`dnslink=/dnslink/29.${domain}`],
+      [`_dnslink.29.${domain}`]: [`dnslink=/dnslink/30.${domain}`],
+      [`_dnslink.30.${domain}`]: [`dnslink=/dnslink/31.${domain}`],
+      [`_dnslink.31.${domain}`]: [`dnslink=/dnslink/32.${domain}/first-path ? goo=dom &# ha `],
       [`_dnslink.32.${domain}`]: ['dnslink=/ipfs/AAFG']
     }),
     async run (t, cmd, domain) {
@@ -247,38 +247,38 @@ module.exports = {
   },
   't11: 33 redirects should exceed the limit of redirects.': {
     dns: domain => ({
-      [`_dnslink.${domain}`]: [`dnslink=/dns/2.${domain}`],
-      [`_dnslink.2.${domain}`]: [`dnslink=/dns/_dnslink.3.${domain}`],
-      [`_dnslink.3.${domain}`]: [`dnslink=/dns/4.${domain}`],
-      [`_dnslink.4.${domain}`]: [`dnslink=/dns/5.${domain}`],
-      [`_dnslink.5.${domain}`]: [`dnslink=/dns/6.${domain}`],
-      [`_dnslink.6.${domain}`]: [`dnslink=/dns/7.${domain}`],
-      [`_dnslink.7.${domain}`]: [`dnslink=/dns/8.${domain}`],
-      [`_dnslink.8.${domain}`]: [`dnslink=/dns/9.${domain}`],
-      [`_dnslink.9.${domain}`]: [`dnslink=/dns/10.${domain}`],
-      [`_dnslink.10.${domain}`]: [`dnslink=/dns/11.${domain}`],
-      [`_dnslink.11.${domain}`]: [`dnslink=/dns/12.${domain}`],
-      [`_dnslink.12.${domain}`]: [`dnslink=/dns/13.${domain}`],
-      [`_dnslink.13.${domain}`]: [`dnslink=/dns/14.${domain}`],
-      [`_dnslink.14.${domain}`]: [`dnslink=/dns/15.${domain}`],
-      [`_dnslink.15.${domain}`]: [`dnslink=/dns/16.${domain}`],
-      [`_dnslink.16.${domain}`]: [`dnslink=/dns/17.${domain}`],
-      [`_dnslink.17.${domain}`]: [`dnslink=/dns/18.${domain}`],
-      [`_dnslink.18.${domain}`]: [`dnslink=/dns/19.${domain}`],
-      [`_dnslink.19.${domain}`]: [`dnslink=/dns/20.${domain}`],
-      [`_dnslink.20.${domain}`]: [`dnslink=/dns/21.${domain}`],
-      [`_dnslink.21.${domain}`]: [`dnslink=/dns/22.${domain}`],
-      [`_dnslink.22.${domain}`]: [`dnslink=/dns/23.${domain}`],
-      [`_dnslink.23.${domain}`]: [`dnslink=/dns/24.${domain}`],
-      [`_dnslink.24.${domain}`]: [`dnslink=/dns/25.${domain}`],
-      [`_dnslink.25.${domain}`]: [`dnslink=/dns/26.${domain}`],
-      [`_dnslink.26.${domain}`]: [`dnslink=/dns/27.${domain}`],
-      [`_dnslink.27.${domain}`]: [`dnslink=/dns/28.${domain}`],
-      [`_dnslink.28.${domain}`]: [`dnslink=/dns/29.${domain}`],
-      [`_dnslink.29.${domain}`]: [`dnslink=/dns/30.${domain}`],
-      [`_dnslink.30.${domain}`]: [`dnslink=/dns/31.${domain}`],
-      [`_dnslink.31.${domain}`]: [`dnslink=/dns/32.${domain}`],
-      [`_dnslink.32.${domain}`]: [`dnslink=/dns/33.${domain}/ abcd`],
+      [`_dnslink.${domain}`]: [`dnslink=/dnslink/2.${domain}`],
+      [`_dnslink.2.${domain}`]: [`dnslink=/dnslink/_dnslink.3.${domain}`],
+      [`_dnslink.3.${domain}`]: [`dnslink=/dnslink/4.${domain}`],
+      [`_dnslink.4.${domain}`]: [`dnslink=/dnslink/5.${domain}`],
+      [`_dnslink.5.${domain}`]: [`dnslink=/dnslink/6.${domain}`],
+      [`_dnslink.6.${domain}`]: [`dnslink=/dnslink/7.${domain}`],
+      [`_dnslink.7.${domain}`]: [`dnslink=/dnslink/8.${domain}`],
+      [`_dnslink.8.${domain}`]: [`dnslink=/dnslink/9.${domain}`],
+      [`_dnslink.9.${domain}`]: [`dnslink=/dnslink/10.${domain}`],
+      [`_dnslink.10.${domain}`]: [`dnslink=/dnslink/11.${domain}`],
+      [`_dnslink.11.${domain}`]: [`dnslink=/dnslink/12.${domain}`],
+      [`_dnslink.12.${domain}`]: [`dnslink=/dnslink/13.${domain}`],
+      [`_dnslink.13.${domain}`]: [`dnslink=/dnslink/14.${domain}`],
+      [`_dnslink.14.${domain}`]: [`dnslink=/dnslink/15.${domain}`],
+      [`_dnslink.15.${domain}`]: [`dnslink=/dnslink/16.${domain}`],
+      [`_dnslink.16.${domain}`]: [`dnslink=/dnslink/17.${domain}`],
+      [`_dnslink.17.${domain}`]: [`dnslink=/dnslink/18.${domain}`],
+      [`_dnslink.18.${domain}`]: [`dnslink=/dnslink/19.${domain}`],
+      [`_dnslink.19.${domain}`]: [`dnslink=/dnslink/20.${domain}`],
+      [`_dnslink.20.${domain}`]: [`dnslink=/dnslink/21.${domain}`],
+      [`_dnslink.21.${domain}`]: [`dnslink=/dnslink/22.${domain}`],
+      [`_dnslink.22.${domain}`]: [`dnslink=/dnslink/23.${domain}`],
+      [`_dnslink.23.${domain}`]: [`dnslink=/dnslink/24.${domain}`],
+      [`_dnslink.24.${domain}`]: [`dnslink=/dnslink/25.${domain}`],
+      [`_dnslink.25.${domain}`]: [`dnslink=/dnslink/26.${domain}`],
+      [`_dnslink.26.${domain}`]: [`dnslink=/dnslink/27.${domain}`],
+      [`_dnslink.27.${domain}`]: [`dnslink=/dnslink/28.${domain}`],
+      [`_dnslink.28.${domain}`]: [`dnslink=/dnslink/29.${domain}`],
+      [`_dnslink.29.${domain}`]: [`dnslink=/dnslink/30.${domain}`],
+      [`_dnslink.30.${domain}`]: [`dnslink=/dnslink/31.${domain}`],
+      [`_dnslink.31.${domain}`]: [`dnslink=/dnslink/32.${domain}`],
+      [`_dnslink.32.${domain}`]: [`dnslink=/dnslink/33.${domain}/ abcd`],
       [`_dnslink.33.${domain}`]: ['dnslink=/ipfs/aahi']
     }),
     async run (t, cmd, domain) {
@@ -325,8 +325,8 @@ module.exports = {
   },
   't12: Recursive redirects are detected.': {
     dns: domain => ({
-      [`_dnslink.${domain}`]: [`dnslink=/dns/1.${domain}`],
-      [`1.${domain}`]: [`dnslink=/dns/${domain}`]
+      [`_dnslink.${domain}`]: [`dnslink=/dnslink/1.${domain}`],
+      [`1.${domain}`]: [`dnslink=/dnslink/${domain}`]
     }),
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
@@ -360,7 +360,7 @@ module.exports = {
   },
   't14: redirects take precendent over entries': {
     dns: domain => ({
-      [domain]: [`dnslink=/dns/1.${domain}`, 'dnslink=/ipfs/mnop'],
+      [domain]: [`dnslink=/dnslink/1.${domain}`, 'dnslink=/ipfs/mnop'],
       [`1.${domain}`]: ['dnslink=/ipns/AALM']
     }),
     async run (t, cmd, domain) {
@@ -379,9 +379,9 @@ module.exports = {
   },
   't15: log order is maintained in redirects domain': {
     dns: domain => ({
-      [domain]: [`dnslink=/dns/1.${domain}`, 'dnslink=/ipfs/mnop', 'dnslink='],
-      [`1.${domain}`]: [`dnslink=/dns/2.${domain}`, 'dnslink=/ipfs/qrst'],
-      [`2.${domain}`]: [`dnslink=/dns/3.${domain}`, 'dnslink=/ipfs/', 'dnslink=/ipns/uvwx'],
+      [domain]: [`dnslink=/dnslink/1.${domain}`, 'dnslink=/ipfs/mnop', 'dnslink='],
+      [`1.${domain}`]: [`dnslink=/dnslink/2.${domain}`, 'dnslink=/ipfs/qrst'],
+      [`2.${domain}`]: [`dnslink=/dnslink/3.${domain}`, 'dnslink=/ipfs/', 'dnslink=/ipns/uvwx'],
       [`3.${domain}`]: ['dnslink=/ipns/AANO']
     }),
     async run (t, cmd, domain) {
@@ -408,8 +408,8 @@ module.exports = {
   },
   't16: invalid and ignored redirects': {
     dns: domain => ({
-      [`_dnslink.${domain}`]: [`dnslink=/dns/1.${domain}`, `dnslink=/dns/2.${domain}`],
-      [`_dnslink.1.${domain}`]: ['dnslink=/dns/3 3', `dnslink=/dns/3.${domain}`],
+      [`_dnslink.${domain}`]: [`dnslink=/dnslink/1.${domain}`, `dnslink=/dnslink/2.${domain}`],
+      [`_dnslink.1.${domain}`]: ['dnslink=/dnslink/3 3', `dnslink=/dnslink/3.${domain}`],
       [`_dnslink.3.${domain}`]: ['dnslink=/ipns/AAPQ']
     }),
     async run (t, cmd, domain) {
@@ -417,9 +417,9 @@ module.exports = {
         links: { ipns: [{ value: 'AAPQ', ttl: 100 }] },
         path: [],
         log: [
-          { code: 'UNUSED_ENTRY', entry: `dnslink=/dns/2.${domain}` },
+          { code: 'UNUSED_ENTRY', entry: `dnslink=/dnslink/2.${domain}` },
           { code: 'REDIRECT', domain: `_dnslink.${domain}` },
-          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/3 3' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dnslink/3 3' },
           { code: 'REDIRECT', domain: `_dnslink.1.${domain}` },
           { code: 'RESOLVE', domain: `_dnslink.3.${domain}` }
         ]
@@ -434,53 +434,53 @@ module.exports = {
       // Apache Commons Validator: https://gitbox.apache.org/repos/asf?p=commons-validator.git;a=blob;f=src/test/java/org/apache/commons/validator/routines/UrlValidatorTest.java;h=557945680a6fc2e86ac1bf19ae8193aac65e90f1;hb=HEAD
       [`_dnslink.${domain}`]: [
         // ↓ Invalid redirects
-        'dnslink=/dns/.',
-        'dnslink=/dns/cool.foo..foo/bar',
-        'dnslink=/dns/./foo',
-        'dnslink=/dns/abc',
-        'dnslink=/dns/abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz01.com',
-        'dnslink=/dns/_.com',
-        'dnslink=/dns/*.some.com',
-        'dnslink=/dns/s!ome.com',
-        'dnslink=/dns//more.com',
-        'dnslink=/dns/domain.com�',
-        'dnslink=/dns/domain.com©',
-        'dnslink=/dns/example.0',
-        'dnslink=/dns/127.0.0.1',
-        'dnslink=/dns/256.0.0.0',
-        'dnslink=/dns/192.168.0.9999',
-        'dnslink=/dns/192.168.0',
-        'dnslink=/dns/123',
-        'dnslink=/dns/日本語.jp',
-        'dnslink=/dns/foo--bar',
-        'dnslink=/dns/b\u00fccher',
-        'dnslink=/dns/\uFFFD',
-        'dnslink=/dns/президент.рф',
+        'dnslink=/dnslink/.',
+        'dnslink=/dnslink/cool.foo..foo/bar',
+        'dnslink=/dnslink/./foo',
+        'dnslink=/dnslink/abc',
+        'dnslink=/dnslink/abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz01.com',
+        'dnslink=/dnslink/_.com',
+        'dnslink=/dnslink/*.some.com',
+        'dnslink=/dnslink/s!ome.com',
+        'dnslink=/dnslink//more.com',
+        'dnslink=/dnslink/domain.com�',
+        'dnslink=/dnslink/domain.com©',
+        'dnslink=/dnslink/example.0',
+        'dnslink=/dnslink/127.0.0.1',
+        'dnslink=/dnslink/256.0.0.0',
+        'dnslink=/dnslink/192.168.0.9999',
+        'dnslink=/dnslink/192.168.0',
+        'dnslink=/dnslink/123',
+        'dnslink=/dnslink/日本語.jp',
+        'dnslink=/dnslink/foo--bar',
+        'dnslink=/dnslink/b\u00fccher',
+        'dnslink=/dnslink/\uFFFD',
+        'dnslink=/dnslink/президент.рф',
         'dnslink=/ipfs/AARS'
       ],
       [`_dnslink.1.${domain}`]: [
-        `dnslink=/dns/xn--froschgrn-x9a.${domain}`,
+        `dnslink=/dnslink/xn--froschgrn-x9a.${domain}`,
         'dnslink=/ipfs/aaab'
       ],
       [`_dnslink.xn--froschgrn-x9a.${domain}`]: [
         'dnslink=/ipfs/AAVW'
       ],
       [`_dnslink.2.${domain}`]: [
-        `dnslink=/dns/1337.${domain}`,
+        `dnslink=/dnslink/1337.${domain}`,
         'dnslink=/ipfs/aaij'
       ],
       [`_dnslink.1337.${domain}`]: [
         'dnslink=/ipfs/BAEF'
       ],
       [`_dnslink.3.${domain}`]: [
-        `dnslink=/dns/abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0.${domain}`,
+        `dnslink=/dnslink/abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0.${domain}`,
         'dnslink=/ipfs/aakl'
       ],
       [`_dnslink.abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0.${domain}`]: [
         'dnslink=/ipfs/BAGH'
       ],
       [`_dnslink.4.${domain}`]: [
-        `dnslink=/dns/4b.${domain}.`,
+        `dnslink=/dnslink/4b.${domain}.`,
         'dnslink=/ipfs/aamn'
       ],
       [`_dnslink.4b.${domain}`]: [
@@ -492,28 +492,28 @@ module.exports = {
         links: { ipfs: [{ value: 'AARS', ttl: 100 }] },
         path: [],
         log: [
-          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/.' },
-          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/cool.foo..foo/bar' },
-          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/./foo' },
-          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/abc' },
-          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz01.com' },
-          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/127.0.0.1' },
-          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/256.0.0.0' },
-          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/_.com' },
-          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/*.some.com' },
-          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/s!ome.com' },
-          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns//more.com' },
-          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/domain.com�' },
-          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/domain.com©' },
-          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/example.0' },
-          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/192.168.0.9999' },
-          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/192.168.0' },
-          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/123' },
-          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/日本語.jp' },
-          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/foo--bar' },
-          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/b\u00fccher' },
-          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/\uFFFD' },
-          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dns/президент.рф' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dnslink/.' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dnslink/cool.foo..foo/bar' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dnslink/./foo' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dnslink/abc' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dnslink/abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz01.com' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dnslink/127.0.0.1' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dnslink/256.0.0.0' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dnslink/_.com' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dnslink/*.some.com' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dnslink/s!ome.com' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dnslink//more.com' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dnslink/domain.com�' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dnslink/domain.com©' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dnslink/example.0' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dnslink/192.168.0.9999' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dnslink/192.168.0' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dnslink/123' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dnslink/日本語.jp' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dnslink/foo--bar' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dnslink/b\u00fccher' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dnslink/\uFFFD' },
+          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dnslink/президент.рф' },
           { code: 'RESOLVE', domain: `_dnslink.${domain}` }
         ]
       })
