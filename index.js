@@ -18,7 +18,7 @@ function inspect (obj) {
 
 const SETUP = {}
 for (const [key, test] of Object.entries(tests)) {
-  const subdomain = /^(t\d+)[:|\s]/.exec(key)[1]
+  const subdomain = /^(t\d+):/.exec(key)[1]
   const domain = `${subdomain}.${test.domain || 'dnslink.dev'}`
   test.targetDomain = domain
 
@@ -27,15 +27,39 @@ for (const [key, test] of Object.entries(tests)) {
     if (!entriesByDomain) {
       continue
     }
-    for (const [domain, txtEntries] of Object.entries(entriesByDomain)) {
-      SETUP[domain] = {
-        [Packet.TYPE.TXT]: txtEntries.map(txtEntry => ({ data: [txtEntry] }))
+    for (const [testDomain, entries] of Object.entries(entriesByDomain)) {
+      if (SETUP[testDomain]) {
+        throw new Error(`Conflicting domain ${testDomain} for ${domain}`)
       }
+      SETUP[testDomain] = normalizeDomainEntries(entries)
     }
   } catch (err) {
     console.error(`Error while setting up ”${domain}” for "${key}" ↓`)
     throw err
   }
+}
+
+function normalizeDomainEntries (entriesByDomain) {
+  const result = {}
+  entriesByDomain = Array.isArray(entriesByDomain) ? entriesByDomain : [entriesByDomain]
+  for (let entries of entriesByDomain) {
+    entries = Array.isArray(entries) ? entries : [entries]
+    for (let entry of entries) {
+      entry = typeof entry === 'string'
+        ? [entry]
+        : entry
+      entry = Array.isArray(entry)
+        ? { type: Packet.TYPE.TXT, data: entry }
+        : entry
+      const byType = result[entry.type]
+      if (!byType) {
+        result[entry.type] = [{ data: entry.data }]
+      } else {
+        byType.push({ data: entry.data })
+      }
+    }
+  }
+  return result
 }
 
 async function startServer () {
@@ -205,5 +229,6 @@ module.exports = {
   getCommand,
   startServer,
   runTests,
+  SETUP,
   tests
 }

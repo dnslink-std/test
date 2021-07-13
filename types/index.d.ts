@@ -25,3 +25,12 @@ export const tests: {
 };
 
 export function runTests(cmd: Command, flags?: { [flag: string]: boolean }, filter?: { only?: string[], skip?: string[] }): typeof tape;
+export interface SetupEntry {
+  data: string[];
+}
+export const SETUP: {
+  [domain: string]: {
+    [rtype: number]: SetupEntry[],
+    RCODE?: SetupEntry[]
+  }
+};

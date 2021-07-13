@@ -6,9 +6,10 @@
 //   DNSIMPLE_BASE_URL (optional): set to https://api.sandbox.dnsimple.com if you would like to use the sandbox
 //
 const dnsimple = require('dnsimple')
-const { tests } = require('.')
+const { SETUP } = require('.')
 const pmapImport = import('p-map')
 const util = require('util')
+const Packet = require('dns2/packet')
 
 ;(async function main () {
   const credentials = {
@@ -32,10 +33,9 @@ const util = require('util')
   const { default: pmap } = await pmapImport
   const { zone, account } = await findAccountForDomain(client, domain)
 
-  const txtEntries = txtEntriesForTests(tests, suffix)
-  const knownSubDomains = new Set(Object.keys(txtEntries))
+  const txtEntries = txtEntriesForTests(suffix)
   const operations = (await client.zones.allZoneRecords(account.id, zone.id, { type: 'TXT' }))
-    .filter(record => knownSubDomains.has(record.name))
+    .filter(record => txtEntries[record.name])
     .map(record => {
       const perDomain = txtEntries[record.name]
       const content = record.content.trim()
@@ -74,14 +74,14 @@ const util = require('util')
   process.exit(1)
 })
 
-function txtEntriesForTests (tests, suffix) {
+function txtEntriesForTests (suffix) {
   const txtEntries = {}
-  for (const test of Object.values(tests)) {
-    const raw = test.dns(test.targetDomain)
-    for (const key in raw) {
-      if (key.endsWith(suffix)) {
-        const subDomain = key.substr(0, key.length - suffix.length)
-        txtEntries[subDomain] = new Set(raw[key].map(entry => entry.trim()))
+  for (const domain in SETUP) {
+    if (domain.endsWith(suffix)) {
+      const subDomain = domain.substr(0, domain.length - suffix.length)
+      const txtResponses = SETUP[domain][Packet.TYPE.TXT]
+      if (txtResponses) {
+        txtEntries[subDomain] = new Set(txtResponses.map(entry => entry.data.join('').trim()))
       }
     }
   }

@@ -334,6 +334,28 @@ function getResult (options) {
           { code: 'RESOLVE', domain: '_dnslink.4b.t17.dnslink.dev' }
         ]
       }
+    case 'formaterror.t18.dnslink.dev':
+      return { error: { code: 'RCODE_1' } }
+    case 'serverfailure.t18.dnslink.dev':
+      return { error: { code: 'RCODE_2' } }
+    case 't18.dnslink.dev':
+      return { error: { code: 'RCODE_3' } }
+    case 'notimplemented.t18.dnslink.dev':
+      return { error: { code: 'RCODE_4' } }
+    case 'refused.t18.dnslink.dev':
+      return { error: { code: 'RCODE_5' } }
+    case 'yxdomain.t18.dnslink.dev':
+      return { error: { code: 'RCODE_6' } }
+    case 'yxrrset.t18.dnslink.dev':
+      return { error: { code: 'RCODE_7' } }
+    case 'nxrrset.t18.dnslink.dev':
+      return { error: { code: 'RCODE_8' } }
+    case 'notauth.t18.dnslink.dev':
+      return { error: { code: 'RCODE_9' } }
+    case 'notzone.t18.dnslink.dev':
+      return { error: { code: 'RCODE_10' } }
+    case 'dsotypeni.t18.dnslink.dev':
+      return { error: { code: 'RCODE_11' } }
   }
   return {
     error: `unexpected domain ${domain}`

@@ -25,6 +25,10 @@ module.exports = async function createServer (entries) {
             ...data
           }
         })
+      } else {
+        const rcode = entries[name] && entries[name].RCODE && entries[name].RCODE[0] && entries[name].RCODE[0].data
+        // In case no answer is given and no error is provided, we use the rcode === 3 aka unknown domain.
+        response.header.rcode = rcode || 3
       }
       send(response)
     }

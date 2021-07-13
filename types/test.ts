@@ -1,4 +1,4 @@
-import { getCommand, startServer, runTests } from '@dnslink/test';
+import { getCommand, startServer, runTests, SETUP, SetupEntry } from '@dnslink/test';
 
 const c = new AbortController();
 
@@ -18,3 +18,14 @@ getCommand(['hello'], c.signal)
     const tests = runTests (cmd, { error: false }, { only: ['t01'], skip: ['t10'] });
     tests.onFinish(() => {});
   });
+
+const domainEntry = SETUP['some.domain'];
+if (domainEntry !== undefined) {
+  const rTypeTXT = domainEntry[16];
+  if (rTypeTXT !== undefined) {
+    // $ExpectType SetupEntry[]
+    rTypeTXT;
+  }
+  // $ExpectType SetupEntry[] | undefined
+  domainEntry.RCODE;
+}
