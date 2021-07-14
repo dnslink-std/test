@@ -8,8 +8,9 @@ const { Packet } = require('dns2')
 const util = require('util')
 const deepEqual = require('fast-deep-equal')
 
-function inspect (obj) {
+function inspect (obj, depth = 7) {
   return util.inspect(obj, {
+    depth,
     sorted: true,
     breakLength: Infinity,
     maxStringLength: Infinity
@@ -180,7 +181,7 @@ function runTests (cmd, flags = {}, filter = {}) {
           }
           return
         }
-        t.deepEquals(excludeLog(actual), excludeLog(expected))
+        t.deepEquals(excludeLog(actual), excludeLog(expected), inspect(expected))
         if (flags.log && expected.log) {
           let log = []
           if (Array.isArray(actual.log)) {
