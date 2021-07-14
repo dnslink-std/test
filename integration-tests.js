@@ -129,13 +129,23 @@ module.exports = {
         'dnslink=/',
         'dnslink=/foo',
         'dnslink=/foo/',
-        'dnslink=/foo/bar'
+        'dnslink=/foo/bar',
+        'dnslink=/foo / bar ',
+        'dnslink=/foo/bar/baz',
+        'dnslink=/foo/bar/baz?qoo=zap',
+        'dnslink=/foo/bar/ baz/ ?qoo=zap '
       ]
     }),
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
         links: {
-          foo: [{ value: 'bar', ttl: 100 }]
+          foo: [
+            { value: 'bar', ttl: 100 },
+            { value: 'bar', ttl: 100 },
+            { value: 'bar/ baz/ ?qoo=zap', ttl: 100 },
+            { value: 'bar/baz', ttl: 100 },
+            { value: 'bar/baz?qoo=zap', ttl: 100 }
+          ]
         },
         path: [],
         log: [

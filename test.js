@@ -92,7 +92,7 @@ function getResult (options) {
       }
     case 't08.dnslink.dev':
       return {
-        links: { foo: [{ value: 'bar', ttl: 100 }] },
+        links: { foo: [{ value: 'bar', ttl: 100 }, { value: 'bar', ttl: 100 }, { value: 'bar/ baz/ ?qoo=zap', ttl: 100 }, { value: 'bar/baz', ttl: 100 }, { value: 'bar/baz?qoo=zap', ttl: 100 }] },
         path: [],
         log: [
           { code: 'REDIRECT', domain: '_dnslink.t08.dnslink.dev' },
