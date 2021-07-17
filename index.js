@@ -43,21 +43,18 @@ for (const [key, test] of Object.entries(tests)) {
 function normalizeDomainEntries (entriesByDomain) {
   const result = {}
   entriesByDomain = Array.isArray(entriesByDomain) ? entriesByDomain : [entriesByDomain]
-  for (let entries of entriesByDomain) {
-    entries = Array.isArray(entries) ? entries : [entries]
-    for (let entry of entries) {
-      entry = typeof entry === 'string'
-        ? [entry]
-        : entry
-      entry = Array.isArray(entry)
-        ? { type: Packet.TYPE.TXT, data: entry }
-        : entry
-      const byType = result[entry.type]
-      if (!byType) {
-        result[entry.type] = [{ data: entry.data }]
-      } else {
-        byType.push({ data: entry.data })
-      }
+  for (let entry of entriesByDomain) {
+    entry = typeof entry === 'string'
+      ? [entry]
+      : entry
+    entry = Array.isArray(entry)
+      ? { type: Packet.TYPE.TXT, data: entry }
+      : entry
+    const byType = result[entry.type]
+    if (!byType) {
+      result[entry.type] = [{ data: entry.data }]
+    } else {
+      byType.push({ data: entry.data })
     }
   }
   return result
