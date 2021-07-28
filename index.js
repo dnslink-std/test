@@ -163,58 +163,59 @@ function runTests (cmd, flags = {}, filter = {}) {
     test(`${name} (${targetDomain})${skip || ''}`, {
       skip: skip !== undefined
     }, async t => {
-      t.dnslink = dnslink
+      t.dnslink = dnslink.bind(null, flags, t)
       await run(t, _cmd, targetDomain)
-      function dnslink (actual, expected) {
-        if (!actual) {
-          t.fail('Result is empty')
-          return
-        }
-        if (expected.error) {
-          if (!actual.error) {
-            t.fail(`Missing error ${expected.error.code}: ${JSON.stringify(actual)}`)
-          } else {
-            t.equals(actual.error.code, expected.error.code, `Expected error ${actual.error.code} == ${expected.error.code} of ${JSON.stringify(actual.error)}`)
-          }
-          return
-        }
-        t.deepEquals(excludeLog(actual), excludeLog(expected), inspect(expected))
-        if (flags.log && expected.log) {
-          let log = []
-          if (Array.isArray(actual.log)) {
-            log = actual.log
-          } else {
-            t.fail('No log given.')
-          }
-          const logSet = new Set(log)
-          for (const [expectedIndex, expectedEntry] of Object.entries(expected.log)) {
-            let foundIndex
-            for (const [actualIndex, actualEntry] of Object.entries(log)) {
-              if (deepEqual(expectedEntry, actualEntry)) {
-                logSet.delete(actualEntry)
-                foundIndex = actualIndex
-                break
-              }
-            }
-            if (foundIndex !== undefined) {
-              // Note: Redirect entries need to come in order but the entries inbetween may be shuffled.
-              if (foundIndex !== expectedIndex && expectedEntry.code === 'REDIRECT') {
-                t.fail('Expected log entry found, but at wrong index. actual=' + foundIndex + ' != expected=' + expectedIndex + ': ' + inspect(expectedEntry))
-              } else {
-                t.pass('Expected log entry returned: ' + inspect(expectedEntry))
-              }
-            } else {
-              t.fail('Log entry missing: ' + inspect(expectedEntry))
-            }
-          }
-          for (const logEntry of logSet) {
-            t.fail('Unexpected log entry: ' + inspect(logEntry))
-          }
-        }
-      }
     })
   })
   return test
+}
+
+function dnslink (flags, t, actual, expected) {
+  if (!actual) {
+    t.fail('Result is empty')
+    return
+  }
+  if (expected.error) {
+    if (!actual.error) {
+      t.fail(`Missing error ${expected.error.code}: ${JSON.stringify(actual)}`)
+    } else {
+      t.equals(actual.error.code, expected.error.code, `Expected error ${actual.error.code} == ${expected.error.code} of ${JSON.stringify(actual.error)}`)
+    }
+    return
+  }
+  t.deepEquals(excludeLog(actual), excludeLog(expected), inspect(expected))
+  if (flags.log && expected.log) {
+    let log = []
+    if (Array.isArray(actual.log)) {
+      log = actual.log
+    } else {
+      t.fail('No log given.')
+    }
+    const logSet = new Set(log)
+    for (const [expectedIndex, expectedEntry] of Object.entries(expected.log)) {
+      let foundIndex
+      for (const [actualIndex, actualEntry] of Object.entries(log)) {
+        if (deepEqual(expectedEntry, actualEntry)) {
+          logSet.delete(actualEntry)
+          foundIndex = actualIndex
+          break
+        }
+      }
+      if (foundIndex !== undefined) {
+        // Note: Redirect entries need to come in order but the entries inbetween may be shuffled.
+        if (foundIndex !== expectedIndex && expectedEntry.code === 'REDIRECT') {
+          t.fail('Expected log entry found, but at wrong index. actual=' + foundIndex + ' != expected=' + expectedIndex + ': ' + inspect(expectedEntry))
+        } else {
+          t.pass('Expected log entry returned: ' + inspect(expectedEntry))
+        }
+      } else {
+        t.fail('Log entry missing: ' + inspect(expectedEntry))
+      }
+    }
+    for (const logEntry of logSet) {
+      t.fail('Unexpected log entry: ' + inspect(logEntry))
+    }
+  }
 }
 
 function excludeLog (obj) {
