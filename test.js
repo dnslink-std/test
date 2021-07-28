@@ -1,4 +1,10 @@
-
+/**
+ * The tests in here are rudimentary and perform as example for implementers of this test suite
+ * and as a way to make sure that changes in the code don't break functioning test cases.
+ *
+ * The tests in here are NOT thorough unit or even integration tests that take account of proper
+ * output or what would happen if wrong output is provided!
+ */
 const domain = process.argv[2]
 const DOMAIN_254C = /* _dnslink. */'abcdefghijklmnopqrstuvwxyz0123456789.' +
   'abcdefghijklmnopqrstuvwxyz0123456789.' +
