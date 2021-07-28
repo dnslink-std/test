@@ -20,13 +20,13 @@ module.exports = async function createServer (entries) {
         if (!Array.isArray(answers)) {
           answers = [answers]
         }
-        response.answers = answers.map((data) => {
+        response.answers = answers.map((entry) => {
           return {
             name,
             type,
             class: clazz || Packet.CLASS.IN,
-            ttl: 100,
-            ...data
+            ttl: entry.ttl,
+            ...entry.data
           }
         })
       } else {

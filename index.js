@@ -43,21 +43,26 @@ for (const [key, test] of Object.entries(tests)) {
 function normalizeDomainEntries (entriesByDomain) {
   const result = {}
   entriesByDomain = Array.isArray(entriesByDomain) ? entriesByDomain : [entriesByDomain]
-  for (let entry of entriesByDomain) {
-    entry = typeof entry === 'string'
-      ? [entry]
-      : entry
-    entry = Array.isArray(entry)
-      ? { type: Packet.TYPE.TXT, data: entry }
-      : entry
+  for (let rawEntry of entriesByDomain) {
+    const entry = processEntry(rawEntry)
     const byType = result[entry.type]
     if (!byType) {
-      result[entry.type] = [{ data: entry.data }]
+      result[entry.type] = [entry]
     } else {
-      byType.push({ data: entry.data })
+      byType.push(entry)
     }
   }
   return result
+}
+
+function processEntry (rawEntry) {
+  if (typeof rawEntry === 'string') {
+    rawEntry = [rawEntry]
+  }
+  if (Array.isArray(rawEntry)) {
+    rawEntry = { type: Packet.TYPE.TXT, data: rawEntry, ttl: 100 }
+  }
+  return rawEntry
 }
 
 async function startServer () {
