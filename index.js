@@ -40,10 +40,9 @@ for (const [key, test] of Object.entries(tests)) {
   }
 }
 
-function normalizeDomainEntries (entriesByDomain) {
+function normalizeDomainEntries (rawEntries) {
   const result = {}
-  entriesByDomain = Array.isArray(entriesByDomain) ? entriesByDomain : [entriesByDomain]
-  for (let rawEntry of entriesByDomain) {
+  for (const rawEntry of Array.isArray(rawEntries) ? rawEntries : [rawEntries]) {
     const entry = processEntry(rawEntry)
     const byType = result[entry.type]
     if (!byType) {
@@ -60,7 +59,17 @@ function processEntry (rawEntry) {
     rawEntry = [rawEntry]
   }
   if (Array.isArray(rawEntry)) {
-    rawEntry = { type: Packet.TYPE.TXT, data: rawEntry, ttl: 100 }
+    rawEntry = { data: rawEntry }
+  } else {
+    if (typeof rawEntry.data === 'string') {
+      rawEntry.data = [rawEntry.data]
+    }
+  }
+  if (!rawEntry.type) {
+    rawEntry.type = Packet.TYPE.TXT
+  }
+  if (!rawEntry.ttl) {
+    rawEntry.ttl = 100
   }
   return rawEntry
 }

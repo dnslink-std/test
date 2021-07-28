@@ -27,6 +27,8 @@ export const tests: {
 export function runTests(cmd: Command, flags?: { [flag: string]: boolean }, filter?: { only?: string[], skip?: string[] }): typeof tape;
 export interface SetupEntry {
   data: string[];
+  type: number;
+  ttl: number;
 }
 export const SETUP: {
   [domain: string]: {

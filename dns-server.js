@@ -26,7 +26,7 @@ module.exports = async function createServer (entries) {
             type,
             class: clazz || Packet.CLASS.IN,
             ttl: entry.ttl,
-            ...entry.data
+            data: entry.data
           }
         })
       } else {

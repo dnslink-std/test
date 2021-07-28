@@ -25,6 +25,13 @@ if (domainEntry !== undefined) {
   if (rTypeTXT !== undefined) {
     // $ExpectType SetupEntry[]
     rTypeTXT;
+    const firstEntry = rTypeTXT[0];
+    // $ExpectType string[]
+    firstEntry.data;
+    // $ExpectType number
+    firstEntry.ttl;
+    // $ExpectType number
+    firstEntry.type;
   }
   // $ExpectType SetupEntry[] | undefined
   domainEntry.RCODE;
