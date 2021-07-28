@@ -721,6 +721,34 @@ function getResult (options) {
         path: [],
         log: [{ code: 'RESOLVE', domain: '_dnslink.123' }]
       }
+    case 't21.dnslink.dev':
+      return {
+        links: { ipfs: [{ value: 'CAYZ', ttl: 25 }] },
+        path: [],
+        log: [
+          { code: 'REDIRECT', domain: '_dnslink.t21.dnslink.dev' },
+          { code: 'RESOLVE', domain: '_dnslink.1.t21.dnslink.dev' }
+        ]
+      }
+    case '2.t21.dnslink.dev':
+      return {
+        links: { ipfs: [{ value: 'CBAB', ttl: 80 }] },
+        path: [],
+        log: [
+          { code: 'REDIRECT', domain: '_dnslink.2.t21.dnslink.dev' },
+          { code: 'RESOLVE', domain: '_dnslink.3.t21.dnslink.dev' }
+        ]
+      }
+    case '4.t21.dnslink.dev':
+      return {
+        links: { ipfs: [{ value: 'CBCD', ttl: 35 }] },
+        path: [],
+        log: [
+          { code: 'REDIRECT', domain: '_dnslink.4.t21.dnslink.dev' },
+          { code: 'REDIRECT', domain: '_dnslink.5.t21.dnslink.dev' },
+          { code: 'RESOLVE', domain: '_dnslink.6.t21.dnslink.dev' }
+        ]
+      }
   }
   return {
     error: `unexpected domain ${domain}`

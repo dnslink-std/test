@@ -640,6 +640,44 @@ module.exports = {
         await testLink(t, cmd, lookup, target, value)
       }
     }
+  },
+  't21: redirect ttl may override target ttl': {
+    dns: domain => ({
+      [`_dnslink.${domain}`]: { data: `dnslink=/dnslink/1.${domain}`, ttl: 25 },
+      [`_dnslink.1.${domain}`]: { data: 'dnslink=/ipfs/CAYZ', ttl: 100 },
+      [`_dnslink.2.${domain}`]: { data: `dnslink=/dnslink/3.${domain}`, ttl: 125 },
+      [`_dnslink.3.${domain}`]: { data: 'dnslink=/ipfs/CBAB', ttl: 80 },
+      [`_dnslink.4.${domain}`]: { data: `dnslink=/dnslink/5.${domain}`, ttl: 125 },
+      [`_dnslink.5.${domain}`]: { data: `dnslink=/dnslink/6.${domain}`, ttl: 35 },
+      [`_dnslink.6.${domain}`]: { data: 'dnslink=/ipfs/CBCD', ttl: 65 }
+    }),
+    async run (t, cmd, domain) {
+      t.dnslink(await cmd(domain), {
+        links: { ipfs: [{ value: 'CAYZ', ttl: 25 }] },
+        path: [],
+        log: [
+          { code: 'REDIRECT', domain: `_dnslink.${domain}` },
+          { code: 'RESOLVE', domain: `_dnslink.1.${domain}` }
+        ]
+      })
+      t.dnslink(await cmd(`2.${domain}`), {
+        links: { ipfs: [{ value: 'CBAB', ttl: 80 }] },
+        path: [],
+        log: [
+          { code: 'REDIRECT', domain: `_dnslink.2.${domain}` },
+          { code: 'RESOLVE', domain: `_dnslink.3.${domain}` }
+        ]
+      })
+      t.dnslink(await cmd(`4.${domain}`), {
+        links: { ipfs: [{ value: 'CBCD', ttl: 35 }] },
+        path: [],
+        log: [
+          { code: 'REDIRECT', domain: `_dnslink.4.${domain}` },
+          { code: 'REDIRECT', domain: `_dnslink.5.${domain}` },
+          { code: 'RESOLVE', domain: `_dnslink.6.${domain}` }
+        ]
+      })
+    }
   }
 }
 
