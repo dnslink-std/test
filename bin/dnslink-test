@@ -27,7 +27,7 @@ const AbortController = require('abort-controller')
     const { serverOpts, close } = await startServer()
     try {
       if (serverOnly) {
-        console.log(serverOpts)
+        console.log(JSON.stringify(serverOpts, null, 2))
         return await new Promise(resolve => signal.addEventListener('abort', resolve))
       }
       const cmd = await getCommand(cmdParts, serverOpts, signal)
