@@ -29,10 +29,10 @@ To use this harness you need to prepare an executable, lets call it `my-impl`.
 
 The list of rules that an implementation needs to cover is defined in [`./integration-tests.js`](./integration-tests.js).
 
-## Offline support
+## Built-in DNS server
 
-`dnslink-test` comes automatically with a dns server that is run on the localhost's udp and tcp port, as well as
-a dns-over-https compatible endpoint (thought its a regular http endpoint).
+`dnslink-test` comes automatically with a DNS server that is run on the localhost's UDP and TCP ports, as well as
+a DNS-overHTTPS compatible endpoint (thought its a regular HTTP endpoint).
 
 The implementation tested receives a second argument which contains a JSON object. Looking like this:
 
@@ -49,6 +49,17 @@ The `udp`, `tpc` and `doh` numbers are ports on which the local server are liste
 tests. They contain the dns TXT entries for all known domains.
 
 _Note:_ The `flags` objects contains any flags that you may have passed in.
+
+One can also run the DNS server in a standalone mode (for debug, or custom CI setups): 
+
+```console
+$ dnslink-test --server-only
+{
+  "udp": 49953,
+  "tcp": 37755,
+  "doh": 39427
+}
+```
 
 ## License
 
