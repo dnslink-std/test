@@ -54,17 +54,17 @@ function getResult (options) {
       }
     case '_dnslink._dnslink.t04.dnslink.dev':
       return {
-        links: { ipfs: [ { value: 'MNOP', ttl: 100 } ] },
+        links: { ipfs: [{ value: 'MNOP', ttl: 100 }] },
         log: []
       }
     case '_dnslink._dnslink._dnslink.t04.dnslink.dev':
       return {
-        links: { ipfs: [ { value: 'QRST', ttl: 100 } ] },
+        links: { ipfs: [{ value: 'QRST', ttl: 100 }] },
         log: []
       }
     case '_dnslink._dnslink._dnslink._dnslink.t04.dnslink.dev':
       return {
-        links: { ipfs: [ { value: 'QRST', ttl: 100 } ] },
+        links: { ipfs: [{ value: 'QRST', ttl: 100 }] },
         log: [{ code: 'FALLBACK' }]
       }
     case 't05.dnslink.dev':
@@ -77,7 +77,7 @@ function getResult (options) {
       }
     case 't06.dnslink.dev':
       return {
-        links: { ipfs: [ { value: 'QRST', ttl: 100 }, { value: 'UVWX', ttl: 100 }, { value: 'Z123', ttl: 100 } ] },
+        links: { ipfs: [{ value: 'QRST', ttl: 100 }, { value: 'UVWX', ttl: 100 }, { value: 'Z123', ttl: 100 }] },
         log: [{ code: 'FALLBACK' }]
       }
     case 't07.dnslink.dev':
@@ -120,201 +120,14 @@ function getResult (options) {
       }
     case 't09.dnslink.dev':
       return {
-        links: { dnslink: [ { value: 'b.t09.dnslink.dev', ttl: 100 } ] },
+        links: { dnslink: [{ value: 'b.t09.dnslink.dev', ttl: 100 }] },
         log: []
-      }
-    case 't10.dnslink.dev':
-      return {
-        links: { ipfs: [{ value: 'AAFG', ttl: 100 }] },
-        log: [
-          { code: 'REDIRECT', domain: `_dnslink.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.2.${domain}`, pathname: '/last-path', search: { foo: ['bar', 'bak'] } },
-          { code: 'REDIRECT', domain: `_dnslink.3.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.4.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.5.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.6.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.7.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.8.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.9.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.10.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.11.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.12.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.13.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.14.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.15.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.16.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.17.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.18.${domain}`, pathname: '/inbetween-path/moo-x%20abcd-foo', search: { foo: ['baz'] } },
-          { code: 'REDIRECT', domain: `_dnslink.19.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.20.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.21.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.22.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.23.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.24.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.25.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.26.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.27.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.28.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.29.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.30.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.31.${domain}` },
-          { code: 'RESOLVE', domain: `_dnslink.32.${domain}`, pathname: '/first-path%20', search: { ' goo': ['dom '] } }
-        ]
-      }
-    case 't11.dnslink.dev':
-      return {
-        links: {},
-        log: [
-          { code: 'REDIRECT', domain: `_dnslink.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.2.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.3.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.4.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.5.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.6.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.7.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.8.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.9.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.10.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.11.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.12.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.13.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.14.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.15.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.16.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.17.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.18.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.19.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.20.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.21.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.22.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.23.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.24.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.25.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.26.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.27.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.28.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.29.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.30.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.31.${domain}` },
-          { code: 'RESOLVE', domain: `_dnslink.32.${domain}` },
-          { code: 'TOO_MANY_REDIRECTS', domain: '_dnslink.33.t11.dnslink.dev', pathname: '/%20abcd' }
-        ]
-      }
-    case 't12.dnslink.dev':
-      return {
-        links: {},
-        log: [
-          { code: 'REDIRECT', domain: `_dnslink.${domain}` },
-          { code: 'REDIRECT', domain: `_dnslink.1.${domain}` },
-          { code: 'RESOLVE', domain: `1.${domain}` },
-          { code: 'ENDLESS_REDIRECT', domain: `_dnslink.${domain}` }
-        ]
       }
     case 't13.dnslink.eth':
       return {
         links: { ipfs: [{ value: 'AAJK', ttl: 100 }] },
         log: [
           { code: 'FALLBACK' }
-        ]
-      }
-    case 't14.dnslink.dev':
-      return {
-        links: { ipns: [{ value: 'AALM', ttl: 100 }] },
-        log: [
-          { code: 'REDIRECT', domain: `_dnslink.${domain}` },
-          { code: 'UNUSED_ENTRY', entry: 'dnslink=/ipfs/mnop' },
-          { code: 'REDIRECT', domain },
-          { code: 'REDIRECT', domain: `_dnslink.1.${domain}` },
-          { code: 'RESOLVE', domain: `1.${domain}` }
-        ]
-      }
-    case 't15.dnslink.dev/test-path?foo=bar&foo=baz&goo=ey':
-      // eslint-disable-next-line
-      const hostname = 't15.dnslink.dev'
-      return {
-        links: { ipns: [{ value: 'AANO', ttl: 100 }] },
-        log: [
-          { code: 'REDIRECT', domain: `_dnslink.${hostname}`, pathname: '/test-path', search: { foo: ['bar', 'baz'], goo: ['ey'] } },
-          { code: 'INVALID_ENTRY', entry: 'dnslink=', reason: 'WRONG_START' },
-          { code: 'UNUSED_ENTRY', entry: 'dnslink=/ipfs/mnop' },
-          { code: 'REDIRECT', domain: hostname },
-          { code: 'REDIRECT', domain: `_dnslink.1.${hostname}` },
-          { code: 'UNUSED_ENTRY', entry: 'dnslink=/ipfs/qrst' },
-          { code: 'REDIRECT', domain: `1.${hostname}` },
-          { code: 'REDIRECT', domain: `_dnslink.2.${hostname}` },
-          { code: 'INVALID_ENTRY', entry: 'dnslink=/ipfs/', reason: 'NO_VALUE' },
-          { code: 'UNUSED_ENTRY', entry: 'dnslink=/ipns/uvwx' },
-          { code: 'REDIRECT', domain: `2.${hostname}` },
-          { code: 'REDIRECT', domain: `_dnslink.3.${hostname}` },
-          { code: 'RESOLVE', domain: `3.${hostname}` }
-        ]
-      }
-    case 't16.dnslink.dev':
-      return {
-        links: { ipns: [{ value: 'AAPQ', ttl: 100 }] },
-        log: [
-          { code: 'UNUSED_ENTRY', entry: 'dnslink=/dnslink/2.t16.dnslink.dev' },
-          { code: 'REDIRECT', domain: '_dnslink.t16.dnslink.dev' },
-          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dnslink/3..3', reason: 'EMPTY_PART' },
-          { code: 'REDIRECT', domain: '_dnslink.1.t16.dnslink.dev' },
-          { code: 'RESOLVE', domain: '_dnslink.3.t16.dnslink.dev' }
-        ]
-      }
-    case 't17.dnslink.dev':
-      return {
-        links: { ipfs: [{ value: 'AARS', ttl: 100 }] },
-        log: [
-          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dnslink/.', reason: 'EMPTY_PART' },
-          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dnslink//more.com', reason: 'EMPTY_PART' },
-          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dnslink/foo..', reason: 'EMPTY_PART' },
-          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dnslink/..foo', reason: 'EMPTY_PART' },
-          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dnslink/foo..bar', reason: 'EMPTY_PART' },
-          { code: 'INVALID_REDIRECT', entry: 'dnslink=/dnslink/abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz01', reason: 'TOO_LONG' },
-          { code: 'INVALID_REDIRECT', entry: `dnslink=/dnslink/${DOMAIN_254C}`, reason: 'TOO_LONG' },
-          { code: 'INVALID_ENTRY', entry: 'dnslink=/dnslink/domain.com�', reason: 'INVALID_CHARACTER' },
-          { code: 'INVALID_ENTRY', entry: 'dnslink=/dnslink/domain.com©', reason: 'INVALID_CHARACTER' },
-          { code: 'INVALID_ENTRY', entry: 'dnslink=/dnslink/日本語.jp', reason: 'INVALID_CHARACTER' },
-          { code: 'INVALID_ENTRY', entry: 'dnslink=/dnslink/b\u00fccher', reason: 'INVALID_CHARACTER' },
-          { code: 'INVALID_ENTRY', entry: 'dnslink=/dnslink/\uFFFD', reason: 'INVALID_CHARACTER' },
-          { code: 'INVALID_ENTRY', entry: 'dnslink=/dnslink/президент.рф', reason: 'INVALID_CHARACTER' },
-          { code: 'RESOLVE', domain: '_dnslink.t17.dnslink.dev' }
-        ]
-      }
-    case '1.t17.dnslink.dev':
-      return {
-        links: { ipfs: [{ value: 'AAVW', ttl: 100 }] },
-        log: [
-          { code: 'UNUSED_ENTRY', entry: 'dnslink=/ipfs/aaab' },
-          { code: 'REDIRECT', domain: '_dnslink.1.t17.dnslink.dev' },
-          { code: 'RESOLVE', domain: '_dnslink.xn--froschgrn-x9a.t17.dnslink.dev' }
-        ]
-      }
-    case '2.t17.dnslink.dev':
-      return {
-        links: { ipfs: [{ value: 'BAEF', ttl: 100 }] },
-        log: [
-          { code: 'UNUSED_ENTRY', entry: 'dnslink=/ipfs/aaij' },
-          { code: 'REDIRECT', domain: '_dnslink.2.t17.dnslink.dev' },
-          { code: 'RESOLVE', domain: '_dnslink.1337.t17.dnslink.dev' }
-        ]
-      }
-    case '3.t17.dnslink.dev':
-      return {
-        links: { ipfs: [{ value: 'BAGH', ttl: 100 }] },
-        log: [
-          { code: 'UNUSED_ENTRY', entry: 'dnslink=/ipfs/aakl' },
-          { code: 'REDIRECT', domain: '_dnslink.3.t17.dnslink.dev' },
-          { code: 'RESOLVE', domain: '_dnslink.abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0.t17.dnslink.dev' }
-        ]
-      }
-    case '4.t17.dnslink.dev':
-    case '4.t17.dnslink.dev.':
-      return {
-        links: { ipfs: [{ value: 'BAIJ', ttl: 100 }] },
-        log: [
-          { code: 'UNUSED_ENTRY', entry: 'dnslink=/ipfs/aamn' },
-          { code: 'REDIRECT', domain: '_dnslink.4.t17.dnslink.dev' },
-          { code: 'RESOLVE', domain: '_dnslink.4b.t17.dnslink.dev' }
         ]
       }
     case 'formaterror.t18.dnslink.dev':
@@ -494,19 +307,9 @@ function getResult (options) {
         links: { ipfs: [{ value: 'CAQR', ttl: 100 }] },
         log: []
       }
-    case '1.t20.dnslink.dev':
-      return {
-        links: { ipfs: [{ value: 'BAKL', ttl: 100 }] },
-        log: []
-      }
     case 'abc':
       return {
         links: { ipfs: [{ value: 'BAKL', ttl: 100 }] },
-        log: []
-      }
-    case '2.t20.dnslink.dev':
-      return {
-        links: { ipfs: [{ value: 'BAUV', ttl: 100 }] },
         log: []
       }
     case 'example.0':
@@ -514,19 +317,9 @@ function getResult (options) {
         links: { ipfs: [{ value: 'BAUV', ttl: 100 }] },
         log: []
       }
-    case '3.t20.dnslink.dev':
-      return {
-        links: { ipfs: [{ value: 'BAWX', ttl: 100 }] },
-        log: []
-      }
     case '127.0.0.1':
       return {
         links: { ipfs: [{ value: 'BAWX', ttl: 100 }] },
-        log: []
-      }
-    case '4.t20.dnslink.dev':
-      return {
-        links: { ipfs: [{ value: 'BAYZ', ttl: 100 }] },
         log: []
       }
     case '256.0.0.0':
@@ -534,19 +327,9 @@ function getResult (options) {
         links: { ipfs: [{ value: 'BAYZ', ttl: 100 }] },
         log: []
       }
-    case '5.t20.dnslink.dev':
-      return {
-        links: { ipfs: [{ value: 'CAST', ttl: 100 }] },
-        log: []
-      }
     case '192.168.0.9999':
       return {
         links: { ipfs: [{ value: 'CAST', ttl: 100 }] },
-        log: []
-      }
-    case '6.t20.dnslink.dev':
-      return {
-        links: { ipfs: [{ value: 'CAUV', ttl: 100 }] },
         log: []
       }
     case '192.168.0':
@@ -554,29 +337,9 @@ function getResult (options) {
         links: { ipfs: [{ value: 'CAUV', ttl: 100 }] },
         log: []
       }
-    case '7.t20.dnslink.dev':
-      return {
-        links: { ipfs: [{ value: 'CAWX', ttl: 100 }] },
-        log: []
-      }
     case '123':
       return {
         links: { ipfs: [{ value: 'CAWX', ttl: 100 }] },
-        log: []
-      }
-    case 't21.dnslink.dev':
-      return {
-        links: { ipfs: [{ value: 'CAYZ', ttl: 25 }] },
-        log: []
-      }
-    case '2.t21.dnslink.dev':
-      return {
-        links: { ipfs: [{ value: 'CBAB', ttl: 80 }] },
-        log: []
-      }
-    case '4.t21.dnslink.dev':
-      return {
-        links: { ipfs: [{ value: 'CBCD', ttl: 35 }] },
         log: []
       }
   }

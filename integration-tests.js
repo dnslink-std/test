@@ -276,7 +276,7 @@ module.exports = {
         ['192.168.0.9999', 'CAST'],
         ['192.168.0', 'CAUV'],
         ['123', 'CAWX']
-      ]) { 
+      ]) {
         await testLink(t, cmd, subdomain, value)
       }
     }
