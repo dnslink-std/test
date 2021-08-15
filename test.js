@@ -37,55 +37,55 @@ function getResult (options) {
       return result
     case 't02.dnslink.example.com':
       return {
-        links: { testkey: [{ value: 'ABCD', ttl: 100 }] },
+        links: { testnamespace: [{ identifier: 'ABCD', ttl: 100 }] },
         log: [{ code: 'FALLBACK' }]
       }
     case 't03.dnslink.example.com':
     case '_dnslink.t03.dnslink.example.com':
       return {
-        links: { testkey: [{ value: 'EFGH', ttl: 100 }] },
+        links: { testnamespace: [{ identifier: 'EFGH', ttl: 100 }] },
         log: []
       }
     case 't04.dnslink.example.com':
     case '_dnslink.t04.dnslink.example.com':
       return {
-        links: { testkey: [{ value: 'IJKL', ttl: 100 }] },
+        links: { testnamespace: [{ identifier: 'IJKL', ttl: 100 }] },
         log: []
       }
     case '_dnslink._dnslink.t04.dnslink.example.com':
       return {
-        links: { testkey: [{ value: 'MNOP', ttl: 100 }] },
+        links: { testnamespace: [{ identifier: 'MNOP', ttl: 100 }] },
         log: []
       }
     case '_dnslink._dnslink._dnslink.t04.dnslink.example.com':
       return {
-        links: { testkey: [{ value: 'QRST', ttl: 100 }] },
+        links: { testnamespace: [{ identifier: 'QRST', ttl: 100 }] },
         log: []
       }
     case '_dnslink._dnslink._dnslink._dnslink.t04.dnslink.example.com':
       return {
-        links: { testkey: [{ value: 'QRST', ttl: 100 }] },
+        links: { testnamespace: [{ identifier: 'QRST', ttl: 100 }] },
         log: [{ code: 'FALLBACK' }]
       }
     case 't05.dnslink.example.com':
       return {
-        links: { testkey: [{ value: 'MNOP', ttl: 100 }] },
+        links: { testnamespace: [{ identifier: 'MNOP', ttl: 100 }] },
         log: [
-          { code: 'INVALID_ENTRY', entry: 'dnslink=/testkey/', reason: 'NO_VALUE' },
-          { code: 'INVALID_ENTRY', entry: 'dnslink=/testkey/ ', reason: 'NO_VALUE' }
+          { code: 'INVALID_ENTRY', entry: 'dnslink=/testnamespace/', reason: 'NO_IDENTIFIER' },
+          { code: 'INVALID_ENTRY', entry: 'dnslink=/testnamespace/ ', reason: 'NO_IDENTIFIER' }
         ]
       }
     case 't06.dnslink.example.com':
       return {
-        links: { testkey: [{ value: 'QRST', ttl: 100 }, { value: 'UVWX', ttl: 100 }, { value: 'Z123', ttl: 100 }] },
+        links: { testnamespace: [{ identifier: 'QRST', ttl: 100 }, { identifier: 'UVWX', ttl: 100 }, { identifier: 'Z123', ttl: 100 }] },
         log: [{ code: 'FALLBACK' }]
       }
     case 't07.dnslink.example.com':
       return {
         links: {
-          testkey: [{ value: '4567', ttl: 100 }],
-          ipns: [{ value: '890A', ttl: 100 }],
-          hyper: [{ value: 'AABC', ttl: 100 }]
+          testnamespace: [{ identifier: '4567', ttl: 100 }],
+          ns_3: [{ identifier: '890A', ttl: 100 }],
+          ns_2: [{ identifier: 'AABC', ttl: 100 }]
         },
         log: [{ code: 'FALLBACK' }]
       }
@@ -93,34 +93,34 @@ function getResult (options) {
       return {
         links: {
           foo: [
-            { value: 'bar', ttl: 100 },
-            { value: 'bar', ttl: 100 },
-            { value: 'bar/ baz/ ?qoo=zap', ttl: 100 },
-            { value: 'bar/baz', ttl: 100 },
-            { value: 'bar/baz?qoo=zap', ttl: 100 }
+            { identifier: 'bar', ttl: 100 },
+            { identifier: 'bar', ttl: 100 },
+            { identifier: 'bar/ baz/ ?qoo=zap', ttl: 100 },
+            { identifier: 'bar/baz', ttl: 100 },
+            { identifier: 'bar/baz?qoo=zap', ttl: 100 }
           ],
           boo: [
-            { value: 'ホガ', ttl: 100 }
+            { identifier: 'ホガ', ttl: 100 }
           ],
           ふげ: [
-            { value: 'baz', ttl: 100 }
+            { identifier: 'baz', ttl: 100 }
           ]
         },
         log: [
           { code: 'FALLBACK' },
           // Note: these errors are purposefully shuffled to make sure that the tests are order independent
-          { code: 'INVALID_ENTRY', entry: 'dnslink=/', reason: 'KEY_MISSING' },
+          { code: 'INVALID_ENTRY', entry: 'dnslink=/', reason: 'NAMESPACE_MISSING' },
           { code: 'INVALID_ENTRY', entry: 'dnslink=/boo%', reason: 'INVALID_ENCODING' },
           { code: 'INVALID_ENTRY', entry: 'dnslink=', reason: 'WRONG_START' },
-          { code: 'INVALID_ENTRY', entry: 'dnslink=/foo/', reason: 'NO_VALUE' },
-          { code: 'INVALID_ENTRY', entry: 'dnslink=/foo', reason: 'NO_VALUE' },
+          { code: 'INVALID_ENTRY', entry: 'dnslink=/foo/', reason: 'NO_IDENTIFIER' },
+          { code: 'INVALID_ENTRY', entry: 'dnslink=/foo', reason: 'NO_IDENTIFIER' },
           { code: 'INVALID_ENTRY', entry: 'dnslink=/foo/ホガ', reason: 'INVALID_CHARACTER' },
           { code: 'INVALID_ENTRY', entry: 'dnslink=/フゲ/bar', reason: 'INVALID_CHARACTER' }
         ]
       }
     case 't09.dnslink.example.com':
       return {
-        links: { dnslink: [{ value: 'b.t09.dnslink.example.com', ttl: 100 }] },
+        links: { dnslink: [{ identifier: 'b.t09.dnslink.example.com', ttl: 100 }] },
         log: []
       }
     case 'formaterror.t18.dnslink.example.com':
@@ -147,192 +147,192 @@ function getResult (options) {
       return { error: { code: 'RCODE_11' } }
     case '1.t19.dnslink.example.com':
       return {
-        links: { testkey: [{ ttl: 100, value: 'AAVW' }] },
+        links: { testnamespace: [{ ttl: 100, identifier: 'AAVW' }] },
         log: []
       }
     case 'xn--froschgrn-x9a.t19.dnslink.example.com':
       return {
-        links: { testkey: [{ ttl: 100, value: 'AAVW' }] },
+        links: { testnamespace: [{ ttl: 100, identifier: 'AAVW' }] },
         log: []
       }
     case '2.t19.dnslink.example.com':
       return {
-        links: { testkey: [{ ttl: 100, value: 'BAEF' }] },
+        links: { testnamespace: [{ ttl: 100, identifier: 'BAEF' }] },
         log: []
       }
     case '1337.t19.dnslink.example.com':
       return {
-        links: { testkey: [{ ttl: 100, value: 'BAEF' }] },
+        links: { testnamespace: [{ ttl: 100, identifier: 'BAEF' }] },
         log: []
       }
     case '3.t19.dnslink.example.com':
       return {
-        links: { testkey: [{ ttl: 100, value: 'BAGH' }] },
+        links: { testnamespace: [{ ttl: 100, identifier: 'BAGH' }] },
         log: []
       }
     case 'abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0.t19.dnslink.example.com':
       return {
-        links: { testkey: [{ ttl: 100, value: 'BAGH' }] },
+        links: { testnamespace: [{ ttl: 100, identifier: 'BAGH' }] },
         log: []
       }
     case '4.t19.dnslink.example.com':
       return {
-        links: { testkey: [{ ttl: 100, value: 'BAIJ' }] },
+        links: { testnamespace: [{ ttl: 100, identifier: 'BAIJ' }] },
         log: []
       }
     case '4b.t19.dnslink.example.com':
       return {
-        links: { testkey: [{ ttl: 100, value: 'BAIJ' }] },
+        links: { testnamespace: [{ ttl: 100, identifier: 'BAIJ' }] },
         log: []
       }
     case '6.t19.dnslink.example.com':
       return {
-        links: { testkey: [{ value: 'BAMN', ttl: 100 }] },
+        links: { testnamespace: [{ identifier: 'BAMN', ttl: 100 }] },
         log: []
       }
     case 'foo--bar.t19.dnslink.example.com':
       return {
-        links: { testkey: [{ value: 'BAMN', ttl: 100 }] },
+        links: { testnamespace: [{ identifier: 'BAMN', ttl: 100 }] },
         log: []
       }
     case '7.t19.dnslink.example.com':
       return {
-        links: { testkey: [{ value: 'BAOP', ttl: 100 }] },
+        links: { testnamespace: [{ identifier: 'BAOP', ttl: 100 }] },
         log: []
       }
     case '_.7.t19.dnslink.example.com':
       return {
-        links: { testkey: [{ value: 'BAOP', ttl: 100 }] },
+        links: { testnamespace: [{ identifier: 'BAOP', ttl: 100 }] },
         log: []
       }
     case '8.t19.dnslink.example.com':
       return {
-        links: { testkey: [{ value: 'BAQR', ttl: 100 }] },
+        links: { testnamespace: [{ identifier: 'BAQR', ttl: 100 }] },
         log: []
       }
     case '*.8.t19.dnslink.example.com':
       return {
-        links: { testkey: [{ value: 'BAQR', ttl: 100 }] },
+        links: { testnamespace: [{ identifier: 'BAQR', ttl: 100 }] },
         log: []
       }
     case '9.t19.dnslink.example.com':
       return {
-        links: { testkey: [{ value: 'BAST', ttl: 100 }] },
+        links: { testnamespace: [{ identifier: 'BAST', ttl: 100 }] },
         log: []
       }
     case 's!ome.9.t19.dnslink.example.com':
       return {
-        links: { testkey: [{ value: 'BAST', ttl: 100 }] },
+        links: { testnamespace: [{ identifier: 'BAST', ttl: 100 }] },
         log: []
       }
     case '10.t19.dnslink.example.com':
       return {
-        links: { testkey: [{ value: 'CAEF', ttl: 100 }] },
+        links: { testnamespace: [{ identifier: 'CAEF', ttl: 100 }] },
         log: []
       }
     case 'domain.com�.t19.dnslink.example.com':
       return {
-        links: { testkey: [{ value: 'CAEF', ttl: 100 }] },
+        links: { testnamespace: [{ identifier: 'CAEF', ttl: 100 }] },
         log: []
       }
     case '11.t19.dnslink.example.com':
       return {
-        links: { testkey: [{ value: 'CAGH', ttl: 100 }] },
+        links: { testnamespace: [{ identifier: 'CAGH', ttl: 100 }] },
         log: []
       }
     case 'domain.com©.t19.dnslink.example.com':
       return {
-        links: { testkey: [{ value: 'CAGH', ttl: 100 }] },
+        links: { testnamespace: [{ identifier: 'CAGH', ttl: 100 }] },
         log: []
       }
     case '12.t19.dnslink.example.com':
       return {
-        links: { testkey: [{ value: 'CAIJ', ttl: 100 }] },
+        links: { testnamespace: [{ identifier: 'CAIJ', ttl: 100 }] },
         log: []
       }
     case '日本語.t19.dnslink.example.com':
       return {
-        links: { testkey: [{ value: 'CAIJ', ttl: 100 }] },
+        links: { testnamespace: [{ identifier: 'CAIJ', ttl: 100 }] },
         log: []
       }
     case '13.t19.dnslink.example.com':
       return {
-        links: { testkey: [{ value: 'CAKL', ttl: 100 }] },
+        links: { testnamespace: [{ identifier: 'CAKL', ttl: 100 }] },
         log: []
       }
     case 'b\u00fccher.t19.dnslink.example.com':
       return {
-        links: { testkey: [{ value: 'CAKL', ttl: 100 }] },
+        links: { testnamespace: [{ identifier: 'CAKL', ttl: 100 }] },
         log: []
       }
     case '14.t19.dnslink.example.com':
       return {
-        links: { testkey: [{ value: 'CAMN', ttl: 100 }] },
+        links: { testnamespace: [{ identifier: 'CAMN', ttl: 100 }] },
         log: []
       }
     case '\uFFFD.t19.dnslink.example.com':
       return {
-        links: { testkey: [{ value: 'CAMN', ttl: 100 }] },
+        links: { testnamespace: [{ identifier: 'CAMN', ttl: 100 }] },
         log: []
       }
     case '15.t19.dnslink.example.com':
       return {
-        links: { testkey: [{ value: 'CAOP', ttl: 100 }] },
+        links: { testnamespace: [{ identifier: 'CAOP', ttl: 100 }] },
         log: []
       }
     case 'президент.рф.t19.dnslink.example.com':
       return {
-        links: { testkey: [{ value: 'CAOP', ttl: 100 }] },
+        links: { testnamespace: [{ identifier: 'CAOP', ttl: 100 }] },
         log: []
       }
     case '16.t19.dnslink.example.com':
       return {
-        links: { testkey: [{ value: 'CAQR', ttl: 100 }] },
+        links: { testnamespace: [{ identifier: 'CAQR', ttl: 100 }] },
         log: []
       }
     case DOMAIN_253C:
       return {
-        links: { testkey: [{ value: 'CAQR', ttl: 100 }] },
+        links: { testnamespace: [{ identifier: 'CAQR', ttl: 100 }] },
         log: []
       }
     case '17.t19.dnslink.example.com':
       return {
-        links: { testkey: [{ value: 'CAQR', ttl: 100 }] },
+        links: { testnamespace: [{ identifier: 'CAQR', ttl: 100 }] },
         log: []
       }
     case 'abc':
       return {
-        links: { testkey: [{ value: 'BAKL', ttl: 100 }] },
+        links: { testnamespace: [{ identifier: 'BAKL', ttl: 100 }] },
         log: []
       }
     case 'example.0':
       return {
-        links: { testkey: [{ value: 'BAUV', ttl: 100 }] },
+        links: { testnamespace: [{ identifier: 'BAUV', ttl: 100 }] },
         log: []
       }
     case '127.0.0.1':
       return {
-        links: { testkey: [{ value: 'BAWX', ttl: 100 }] },
+        links: { testnamespace: [{ identifier: 'BAWX', ttl: 100 }] },
         log: []
       }
     case '256.0.0.0':
       return {
-        links: { testkey: [{ value: 'BAYZ', ttl: 100 }] },
+        links: { testnamespace: [{ identifier: 'BAYZ', ttl: 100 }] },
         log: []
       }
     case '192.168.0.9999':
       return {
-        links: { testkey: [{ value: 'CAST', ttl: 100 }] },
+        links: { testnamespace: [{ identifier: 'CAST', ttl: 100 }] },
         log: []
       }
     case '192.168.0':
       return {
-        links: { testkey: [{ value: 'CAUV', ttl: 100 }] },
+        links: { testnamespace: [{ identifier: 'CAUV', ttl: 100 }] },
         log: []
       }
     case '123':
       return {
-        links: { testkey: [{ value: 'CAWX', ttl: 100 }] },
+        links: { testnamespace: [{ identifier: 'CAWX', ttl: 100 }] },
         log: []
       }
   }
