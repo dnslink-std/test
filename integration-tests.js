@@ -192,9 +192,8 @@ module.exports = {
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
         links: { ipfs: [{ value: 'AAJK', ttl: 100 }] },
-        path: [],
         log: [
-          { code: 'RESOLVE', domain: `_dnslink.${domain}` }
+          { code: 'FALLBACK' }
         ]
       })
     }

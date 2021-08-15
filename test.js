@@ -21,10 +21,8 @@ function getResult (options) {
       /* eslint-disable-next-line no-case-declarations */
       const result = {
         links: {},
-        path: [],
         log: [
-          { code: 'REDIRECT', domain: '_dnslink.t01.dnslink.dev' },
-          { code: 'RESOLVE', domain: 't01.dnslink.dev' }
+          { code: 'FALLBACK' }
         ]
       }
       if (typeof options.udp !== 'number') {
@@ -40,56 +38,47 @@ function getResult (options) {
     case 't02.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'ABCD', ttl: 100 }] },
-        path: [],
-        log: [
-          { code: 'REDIRECT', domain: '_dnslink.t02.dnslink.dev' },
-          { code: 'RESOLVE', domain: 't02.dnslink.dev' }
-        ]
+        log: [{ code: 'FALLBACK' }]
       }
     case 't03.dnslink.dev':
     case '_dnslink.t03.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'EFGH', ttl: 100 }] },
-        path: [],
-        log: [{ code: 'RESOLVE', domain: '_dnslink.t03.dnslink.dev' }]
+        log: []
       }
     case 't04.dnslink.dev':
     case '_dnslink.t04.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'IJKL', ttl: 100 }] },
-        path: [],
-        log: [{
-          code: 'RESOLVE', domain: '_dnslink.t04.dnslink.dev'
-        }]
+        log: []
       }
     case '_dnslink._dnslink.t04.dnslink.dev':
       return {
-        error: { code: 'RECURSIVE_DNSLINK_PREFIX' }
+        links: { ipfs: [ { value: 'MNOP', ttl: 100 } ] },
+        log: []
+      }
+    case '_dnslink._dnslink._dnslink.t04.dnslink.dev':
+      return {
+        links: { ipfs: [ { value: 'QRST', ttl: 100 } ] },
+        log: []
+      }
+    case '_dnslink._dnslink._dnslink._dnslink.t04.dnslink.dev':
+      return {
+        links: { ipfs: [ { value: 'QRST', ttl: 100 } ] },
+        log: [{ code: 'FALLBACK' }]
       }
     case 't05.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'MNOP', ttl: 100 }] },
-        path: [],
         log: [
           { code: 'INVALID_ENTRY', entry: 'dnslink=/ipfs/', reason: 'NO_VALUE' },
-          { code: 'INVALID_ENTRY', entry: 'dnslink=/ipfs/ ', reason: 'NO_VALUE' },
-          { code: 'RESOLVE', domain: '_dnslink.t05.dnslink.dev' }
+          { code: 'INVALID_ENTRY', entry: 'dnslink=/ipfs/ ', reason: 'NO_VALUE' }
         ]
       }
     case 't06.dnslink.dev':
       return {
-        links: {
-          ipfs: [
-            { value: 'QRST', ttl: 100 },
-            { value: 'UVWX', ttl: 100 },
-            { value: 'Z123', ttl: 100 }
-          ]
-        },
-        path: [],
-        log: [
-          { code: 'REDIRECT', domain: '_dnslink.t06.dnslink.dev' },
-          { code: 'RESOLVE', domain: 't06.dnslink.dev' }
-        ]
+        links: { ipfs: [ { value: 'QRST', ttl: 100 }, { value: 'UVWX', ttl: 100 }, { value: 'Z123', ttl: 100 } ] },
+        log: [{ code: 'FALLBACK' }]
       }
     case 't07.dnslink.dev':
       return {
@@ -98,11 +87,7 @@ function getResult (options) {
           ipns: [{ value: '890A', ttl: 100 }],
           hyper: [{ value: 'AABC', ttl: 100 }]
         },
-        path: [],
-        log: [
-          { code: 'REDIRECT', domain: '_dnslink.t07.dnslink.dev' },
-          { code: 'RESOLVE', domain: 't07.dnslink.dev' }
-        ]
+        log: [{ code: 'FALLBACK' }]
       }
     case 't08.dnslink.dev':
       return {
@@ -121,9 +106,8 @@ function getResult (options) {
             { value: 'baz', ttl: 100 }
           ]
         },
-        path: [],
         log: [
-          { code: 'REDIRECT', domain: `_dnslink.${domain}` },
+          { code: 'FALLBACK' },
           // Note: these errors are purposefully shuffled to make sure that the tests are order independent
           { code: 'INVALID_ENTRY', entry: 'dnslink=/', reason: 'KEY_MISSING' },
           { code: 'INVALID_ENTRY', entry: 'dnslink=/boo%', reason: 'INVALID_ENCODING' },
@@ -131,27 +115,17 @@ function getResult (options) {
           { code: 'INVALID_ENTRY', entry: 'dnslink=/foo/', reason: 'NO_VALUE' },
           { code: 'INVALID_ENTRY', entry: 'dnslink=/foo', reason: 'NO_VALUE' },
           { code: 'INVALID_ENTRY', entry: 'dnslink=/foo/ホガ', reason: 'INVALID_CHARACTER' },
-          { code: 'INVALID_ENTRY', entry: 'dnslink=/フゲ/bar', reason: 'INVALID_CHARACTER' },
-          { code: 'RESOLVE', domain }
+          { code: 'INVALID_ENTRY', entry: 'dnslink=/フゲ/bar', reason: 'INVALID_CHARACTER' }
         ]
       }
     case 't09.dnslink.dev':
       return {
-        links: { ipfs: [{ value: 'AADE', ttl: 100 }] },
-        path: [],
-        log: [
-          { code: 'REDIRECT', domain: '_dnslink.t09.dnslink.dev' },
-          { code: 'RESOLVE', domain: '_dnslink.b.t09.dnslink.dev' }
-        ]
+        links: { dnslink: [ { value: 'b.t09.dnslink.dev', ttl: 100 } ] },
+        log: []
       }
     case 't10.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'AAFG', ttl: 100 }] },
-        path: [
-          { pathname: '/first-path%20', search: { ' goo': ['dom '] } },
-          { pathname: '/inbetween-path/moo-x%20abcd-foo', search: { foo: ['baz'] } },
-          { pathname: '/last-path', search: { foo: ['bar', 'bak'] } }
-        ],
         log: [
           { code: 'REDIRECT', domain: `_dnslink.${domain}` },
           { code: 'REDIRECT', domain: `_dnslink.2.${domain}`, pathname: '/last-path', search: { foo: ['bar', 'bak'] } },
@@ -190,7 +164,6 @@ function getResult (options) {
     case 't11.dnslink.dev':
       return {
         links: {},
-        path: [],
         log: [
           { code: 'REDIRECT', domain: `_dnslink.${domain}` },
           { code: 'REDIRECT', domain: `_dnslink.2.${domain}` },
@@ -230,7 +203,6 @@ function getResult (options) {
     case 't12.dnslink.dev':
       return {
         links: {},
-        path: [],
         log: [
           { code: 'REDIRECT', domain: `_dnslink.${domain}` },
           { code: 'REDIRECT', domain: `_dnslink.1.${domain}` },
@@ -241,15 +213,13 @@ function getResult (options) {
     case 't13.dnslink.eth':
       return {
         links: { ipfs: [{ value: 'AAJK', ttl: 100 }] },
-        path: [],
         log: [
-          { code: 'RESOLVE', domain: `_dnslink.${domain}` }
+          { code: 'FALLBACK' }
         ]
       }
     case 't14.dnslink.dev':
       return {
         links: { ipns: [{ value: 'AALM', ttl: 100 }] },
-        path: [],
         log: [
           { code: 'REDIRECT', domain: `_dnslink.${domain}` },
           { code: 'UNUSED_ENTRY', entry: 'dnslink=/ipfs/mnop' },
@@ -263,9 +233,6 @@ function getResult (options) {
       const hostname = 't15.dnslink.dev'
       return {
         links: { ipns: [{ value: 'AANO', ttl: 100 }] },
-        path: [
-          { pathname: '/test-path', search: { foo: ['bar', 'baz'], goo: ['ey'] } }
-        ],
         log: [
           { code: 'REDIRECT', domain: `_dnslink.${hostname}`, pathname: '/test-path', search: { foo: ['bar', 'baz'], goo: ['ey'] } },
           { code: 'INVALID_ENTRY', entry: 'dnslink=', reason: 'WRONG_START' },
@@ -285,7 +252,6 @@ function getResult (options) {
     case 't16.dnslink.dev':
       return {
         links: { ipns: [{ value: 'AAPQ', ttl: 100 }] },
-        path: [],
         log: [
           { code: 'UNUSED_ENTRY', entry: 'dnslink=/dnslink/2.t16.dnslink.dev' },
           { code: 'REDIRECT', domain: '_dnslink.t16.dnslink.dev' },
@@ -297,7 +263,6 @@ function getResult (options) {
     case 't17.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'AARS', ttl: 100 }] },
-        path: [],
         log: [
           { code: 'INVALID_REDIRECT', entry: 'dnslink=/dnslink/.', reason: 'EMPTY_PART' },
           { code: 'INVALID_REDIRECT', entry: 'dnslink=/dnslink//more.com', reason: 'EMPTY_PART' },
@@ -318,7 +283,6 @@ function getResult (options) {
     case '1.t17.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'AAVW', ttl: 100 }] },
-        path: [],
         log: [
           { code: 'UNUSED_ENTRY', entry: 'dnslink=/ipfs/aaab' },
           { code: 'REDIRECT', domain: '_dnslink.1.t17.dnslink.dev' },
@@ -328,7 +292,6 @@ function getResult (options) {
     case '2.t17.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'BAEF', ttl: 100 }] },
-        path: [],
         log: [
           { code: 'UNUSED_ENTRY', entry: 'dnslink=/ipfs/aaij' },
           { code: 'REDIRECT', domain: '_dnslink.2.t17.dnslink.dev' },
@@ -338,7 +301,6 @@ function getResult (options) {
     case '3.t17.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'BAGH', ttl: 100 }] },
-        path: [],
         log: [
           { code: 'UNUSED_ENTRY', entry: 'dnslink=/ipfs/aakl' },
           { code: 'REDIRECT', domain: '_dnslink.3.t17.dnslink.dev' },
@@ -349,7 +311,6 @@ function getResult (options) {
     case '4.t17.dnslink.dev.':
       return {
         links: { ipfs: [{ value: 'BAIJ', ttl: 100 }] },
-        path: [],
         log: [
           { code: 'UNUSED_ENTRY', entry: 'dnslink=/ipfs/aamn' },
           { code: 'REDIRECT', domain: '_dnslink.4.t17.dnslink.dev' },
@@ -381,379 +342,242 @@ function getResult (options) {
     case '1.t19.dnslink.dev':
       return {
         links: { ipfs: [{ ttl: 100, value: 'AAVW' }] },
-        path: [],
-        log: [
-          { code: 'REDIRECT', domain: '_dnslink.1.t19.dnslink.dev' },
-          { code: 'RESOLVE', domain: '_dnslink.xn--froschgrn-x9a.t19.dnslink.dev' }
-        ]
+        log: []
       }
     case 'xn--froschgrn-x9a.t19.dnslink.dev':
       return {
         links: { ipfs: [{ ttl: 100, value: 'AAVW' }] },
-        path: [],
-        log: [{ code: 'RESOLVE', domain: '_dnslink.xn--froschgrn-x9a.t19.dnslink.dev' }]
+        log: []
       }
     case '2.t19.dnslink.dev':
       return {
         links: { ipfs: [{ ttl: 100, value: 'BAEF' }] },
-        path: [],
-        log: [
-          { code: 'REDIRECT', domain: '_dnslink.2.t19.dnslink.dev' },
-          { code: 'RESOLVE', domain: '_dnslink.1337.t19.dnslink.dev' }
-        ]
+        log: []
       }
     case '1337.t19.dnslink.dev':
       return {
         links: { ipfs: [{ ttl: 100, value: 'BAEF' }] },
-        path: [],
-        log: [{ code: 'RESOLVE', domain: '_dnslink.1337.t19.dnslink.dev' }]
+        log: []
       }
     case '3.t19.dnslink.dev':
       return {
         links: { ipfs: [{ ttl: 100, value: 'BAGH' }] },
-        path: [],
-        log: [
-          { code: 'REDIRECT', domain: '_dnslink.3.t19.dnslink.dev' },
-          { code: 'RESOLVE', domain: '_dnslink.abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0.t19.dnslink.dev' }
-        ]
+        log: []
       }
     case 'abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0.t19.dnslink.dev':
       return {
         links: { ipfs: [{ ttl: 100, value: 'BAGH' }] },
-        path: [],
-        log: [{ code: 'RESOLVE', domain: '_dnslink.abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0.t19.dnslink.dev' }]
+        log: []
       }
     case '4.t19.dnslink.dev':
       return {
         links: { ipfs: [{ ttl: 100, value: 'BAIJ' }] },
-        path: [],
-        log: [
-          { code: 'REDIRECT', domain: '_dnslink.4.t19.dnslink.dev' },
-          { code: 'RESOLVE', domain: '_dnslink.4b.t19.dnslink.dev' }
-        ]
+        log: []
       }
     case '4b.t19.dnslink.dev':
       return {
         links: { ipfs: [{ ttl: 100, value: 'BAIJ' }] },
-        path: [],
-        log: [{ code: 'RESOLVE', domain: '_dnslink.4b.t19.dnslink.dev' }]
+        log: []
       }
     case '6.t19.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'BAMN', ttl: 100 }] },
-        path: [],
-        log: [
-          { code: 'REDIRECT', domain: '_dnslink.6.t19.dnslink.dev' },
-          { code: 'RESOLVE', domain: '_dnslink.foo--bar.t19.dnslink.dev' }
-        ]
+        log: []
       }
     case 'foo--bar.t19.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'BAMN', ttl: 100 }] },
-        path: [],
-        log: [{ code: 'RESOLVE', domain: '_dnslink.foo--bar.t19.dnslink.dev' }]
+        log: []
       }
     case '7.t19.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'BAOP', ttl: 100 }] },
-        path: [],
-        log: [
-          { code: 'REDIRECT', domain: '_dnslink.7.t19.dnslink.dev' },
-          { code: 'RESOLVE', domain: '_dnslink._.7.t19.dnslink.dev' }
-        ]
+        log: []
       }
     case '_.7.t19.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'BAOP', ttl: 100 }] },
-        path: [],
-        log: [{ code: 'RESOLVE', domain: '_dnslink._.7.t19.dnslink.dev' }]
+        log: []
       }
     case '8.t19.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'BAQR', ttl: 100 }] },
-        path: [],
-        log: [
-          { code: 'REDIRECT', domain: '_dnslink.8.t19.dnslink.dev' },
-          { code: 'RESOLVE', domain: '_dnslink.*.8.t19.dnslink.dev' }
-        ]
+        log: []
       }
     case '*.8.t19.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'BAQR', ttl: 100 }] },
-        path: [],
-        log: [{ code: 'RESOLVE', domain: '_dnslink.*.8.t19.dnslink.dev' }]
+        log: []
       }
     case '9.t19.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'BAST', ttl: 100 }] },
-        path: [],
-        log: [
-          { code: 'REDIRECT', domain: '_dnslink.9.t19.dnslink.dev' },
-          { code: 'RESOLVE', domain: '_dnslink.s!ome.9.t19.dnslink.dev' }
-        ]
+        log: []
       }
     case 's!ome.9.t19.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'BAST', ttl: 100 }] },
-        path: [],
-        log: [
-          { code: 'RESOLVE', domain: '_dnslink.s!ome.9.t19.dnslink.dev' }]
+        log: []
       }
     case '10.t19.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'CAEF', ttl: 100 }] },
-        path: [],
-        log: [
-          { code: 'REDIRECT', domain: '_dnslink.10.t19.dnslink.dev' },
-          { code: 'RESOLVE', domain: '_dnslink.domain.com�.t19.dnslink.dev' }
-        ]
+        log: []
       }
     case 'domain.com�.t19.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'CAEF', ttl: 100 }] },
-        path: [],
-        log: [
-          { code: 'RESOLVE', domain: '_dnslink.domain.com�.t19.dnslink.dev' }]
+        log: []
       }
     case '11.t19.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'CAGH', ttl: 100 }] },
-        path: [],
-        log: [
-          { code: 'REDIRECT', domain: '_dnslink.11.t19.dnslink.dev' },
-          { code: 'RESOLVE', domain: '_dnslink.domain.com©.t19.dnslink.dev' }
-        ]
+        log: []
       }
     case 'domain.com©.t19.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'CAGH', ttl: 100 }] },
-        path: [],
-        log: [
-          { code: 'RESOLVE', domain: '_dnslink.domain.com©.t19.dnslink.dev' }]
+        log: []
       }
     case '12.t19.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'CAIJ', ttl: 100 }] },
-        path: [],
-        log: [
-          { code: 'REDIRECT', domain: '_dnslink.12.t19.dnslink.dev' },
-          { code: 'RESOLVE', domain: '_dnslink.日本語.t19.dnslink.dev' }
-        ]
+        log: []
       }
     case '日本語.t19.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'CAIJ', ttl: 100 }] },
-        path: [],
-        log: [
-          { code: 'RESOLVE', domain: '_dnslink.日本語.t19.dnslink.dev' }]
+        log: []
       }
     case '13.t19.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'CAKL', ttl: 100 }] },
-        path: [],
-        log: [
-          { code: 'REDIRECT', domain: '_dnslink.13.t19.dnslink.dev' },
-          { code: 'RESOLVE', domain: '_dnslink.b\u00fccher.t19.dnslink.dev' }
-        ]
+        log: []
       }
     case 'b\u00fccher.t19.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'CAKL', ttl: 100 }] },
-        path: [],
-        log: [
-          { code: 'RESOLVE', domain: '_dnslink.b\u00fccher.t19.dnslink.dev' }]
+        log: []
       }
     case '14.t19.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'CAMN', ttl: 100 }] },
-        path: [],
-        log: [
-          { code: 'REDIRECT', domain: '_dnslink.14.t19.dnslink.dev' },
-          { code: 'RESOLVE', domain: '_dnslink.\uFFFD.t19.dnslink.dev' }
-        ]
+        log: []
       }
     case '\uFFFD.t19.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'CAMN', ttl: 100 }] },
-        path: [],
-        log: [
-          { code: 'RESOLVE', domain: '_dnslink.\uFFFD.t19.dnslink.dev' }]
+        log: []
       }
     case '15.t19.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'CAOP', ttl: 100 }] },
-        path: [],
-        log: [
-          { code: 'REDIRECT', domain: '_dnslink.15.t19.dnslink.dev' },
-          { code: 'RESOLVE', domain: '_dnslink.президент.рф.t19.dnslink.dev' }
-        ]
+        log: []
       }
     case 'президент.рф.t19.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'CAOP', ttl: 100 }] },
-        path: [],
-        log: [
-          { code: 'RESOLVE', domain: '_dnslink.президент.рф.t19.dnslink.dev' }]
+        log: []
       }
     case '16.t19.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'CAQR', ttl: 100 }] },
-        path: [],
-        log: [
-          { code: 'REDIRECT', domain: '_dnslink.16.t19.dnslink.dev' },
-          { code: 'RESOLVE', domain: `_dnslink.${DOMAIN_253C}` }
-        ]
+        log: []
       }
     case DOMAIN_253C:
       return {
         links: { ipfs: [{ value: 'CAQR', ttl: 100 }] },
-        path: [],
-        log: [
-          { code: 'RESOLVE', domain: `_dnslink.${DOMAIN_253C}` }]
+        log: []
       }
     case '17.t19.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'CAQR', ttl: 100 }] },
-        path: [],
-        log: [
-          { code: 'REDIRECT', domain: '_dnslink.17.t19.dnslink.dev' },
-          { code: 'RESOLVE', domain: `_dnslink.${DOMAIN_253C}` }
-        ]
+        log: []
       }
     case '1.t20.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'BAKL', ttl: 100 }] },
-        path: [],
-        log: [
-          { code: 'REDIRECT', domain: '_dnslink.1.t20.dnslink.dev' },
-          { code: 'RESOLVE', domain: '_dnslink.abc' }
-        ]
+        log: []
       }
     case 'abc':
       return {
         links: { ipfs: [{ value: 'BAKL', ttl: 100 }] },
-        path: [],
-        log: [{ code: 'RESOLVE', domain: '_dnslink.abc' }]
+        log: []
       }
     case '2.t20.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'BAUV', ttl: 100 }] },
-        path: [],
-        log: [
-          { code: 'REDIRECT', domain: '_dnslink.2.t20.dnslink.dev' },
-          { code: 'RESOLVE', domain: '_dnslink.example.0' }
-        ]
+        log: []
       }
     case 'example.0':
       return {
         links: { ipfs: [{ value: 'BAUV', ttl: 100 }] },
-        path: [],
-        log: [
-          { code: 'RESOLVE', domain: '_dnslink.example.0' }
-        ]
+        log: []
       }
     case '3.t20.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'BAWX', ttl: 100 }] },
-        path: [],
-        log: [
-          { code: 'REDIRECT', domain: '_dnslink.3.t20.dnslink.dev' },
-          { code: 'RESOLVE', domain: '_dnslink.127.0.0.1' }
-        ]
+        log: []
       }
     case '127.0.0.1':
       return {
         links: { ipfs: [{ value: 'BAWX', ttl: 100 }] },
-        path: [],
-        log: [{ code: 'RESOLVE', domain: '_dnslink.127.0.0.1' }]
+        log: []
       }
     case '4.t20.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'BAYZ', ttl: 100 }] },
-        path: [],
-        log: [
-          { code: 'REDIRECT', domain: '_dnslink.4.t20.dnslink.dev' },
-          { code: 'RESOLVE', domain: '_dnslink.256.0.0.0' }
-        ]
+        log: []
       }
     case '256.0.0.0':
       return {
         links: { ipfs: [{ value: 'BAYZ', ttl: 100 }] },
-        path: [],
-        log: [{ code: 'RESOLVE', domain: '_dnslink.256.0.0.0' }]
+        log: []
       }
     case '5.t20.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'CAST', ttl: 100 }] },
-        path: [],
-        log: [
-          { code: 'REDIRECT', domain: '_dnslink.5.t20.dnslink.dev' },
-          { code: 'RESOLVE', domain: '_dnslink.192.168.0.9999' }
-        ]
+        log: []
       }
     case '192.168.0.9999':
       return {
         links: { ipfs: [{ value: 'CAST', ttl: 100 }] },
-        path: [],
-        log: [{ code: 'RESOLVE', domain: '_dnslink.192.168.0.9999' }]
+        log: []
       }
     case '6.t20.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'CAUV', ttl: 100 }] },
-        path: [],
-        log: [
-          { code: 'REDIRECT', domain: '_dnslink.6.t20.dnslink.dev' },
-          { code: 'RESOLVE', domain: '_dnslink.192.168.0' }
-        ]
+        log: []
       }
     case '192.168.0':
       return {
         links: { ipfs: [{ value: 'CAUV', ttl: 100 }] },
-        path: [],
-        log: [{ code: 'RESOLVE', domain: '_dnslink.192.168.0' }]
+        log: []
       }
     case '7.t20.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'CAWX', ttl: 100 }] },
-        path: [],
-        log: [
-          { code: 'REDIRECT', domain: '_dnslink.7.t20.dnslink.dev' },
-          { code: 'RESOLVE', domain: '_dnslink.123' }
-        ]
+        log: []
       }
     case '123':
       return {
         links: { ipfs: [{ value: 'CAWX', ttl: 100 }] },
-        path: [],
-        log: [{ code: 'RESOLVE', domain: '_dnslink.123' }]
+        log: []
       }
     case 't21.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'CAYZ', ttl: 25 }] },
-        path: [],
-        log: [
-          { code: 'REDIRECT', domain: '_dnslink.t21.dnslink.dev' },
-          { code: 'RESOLVE', domain: '_dnslink.1.t21.dnslink.dev' }
-        ]
+        log: []
       }
     case '2.t21.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'CBAB', ttl: 80 }] },
-        path: [],
-        log: [
-          { code: 'REDIRECT', domain: '_dnslink.2.t21.dnslink.dev' },
-          { code: 'RESOLVE', domain: '_dnslink.3.t21.dnslink.dev' }
-        ]
+        log: []
       }
     case '4.t21.dnslink.dev':
       return {
         links: { ipfs: [{ value: 'CBCD', ttl: 35 }] },
-        path: [],
-        log: [
-          { code: 'REDIRECT', domain: '_dnslink.4.t21.dnslink.dev' },
-          { code: 'REDIRECT', domain: '_dnslink.5.t21.dnslink.dev' },
-          { code: 'RESOLVE', domain: '_dnslink.6.t21.dnslink.dev' }
-        ]
+        log: []
       }
   }
   return {
