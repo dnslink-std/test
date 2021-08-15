@@ -21,27 +21,27 @@ module.exports = {
       })
     }
   },
-  't02: A domain without a _dnslink subdomain, containing one valid ipfs link, should return that link.': {
+  't02: A domain without a _dnslink subdomain, containing one valid testkey link, should return that link.': {
     dns: domain => ({
-      [domain]: 'dnslink=/ipfs/ABCD'
+      [domain]: 'dnslink=/testkey/ABCD'
     }),
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
-        links: { ipfs: [{ value: 'ABCD', ttl: 100 }] },
+        links: { testkey: [{ value: 'ABCD', ttl: 100 }] },
         log: [
           { code: 'FALLBACK' }
         ]
       })
     }
   },
-  't03: A domain with _dnslink subdomain, containing one valid ipfs link, should return that.': {
+  't03: A domain with _dnslink subdomain, containing one valid testkey link, should return that.': {
     dns: domain => ({
-      [domain]: 'dnslink=/ipfs/abcd',
-      [`_dnslink.${domain}`]: 'dnslink=/ipfs/EFGH'
+      [domain]: 'dnslink=/testkey/abcd',
+      [`_dnslink.${domain}`]: 'dnslink=/testkey/EFGH'
     }),
     async run (t, cmd, domain) {
       const result = {
-        links: { ipfs: [{ value: 'EFGH', ttl: 100 }] },
+        links: { testkey: [{ value: 'EFGH', ttl: 100 }] },
         log: []
       }
       t.dnslink(await cmd(domain), result)
@@ -50,19 +50,19 @@ module.exports = {
   },
   't04: Repeat _dnslink subdomains should cause a log entry': {
     dns: domain => ({
-      [domain]: 'dnslink=/ipfs/efgh',
-      [`_dnslink.${domain}`]: 'dnslink=/ipfs/IJKL',
-      [`_dnslink._dnslink.${domain}`]: 'dnslink=/ipfs/MNOP',
-      [`_dnslink._dnslink._dnslink.${domain}`]: 'dnslink=/ipfs/QRST'
+      [domain]: 'dnslink=/testkey/efgh',
+      [`_dnslink.${domain}`]: 'dnslink=/testkey/IJKL',
+      [`_dnslink._dnslink.${domain}`]: 'dnslink=/testkey/MNOP',
+      [`_dnslink._dnslink._dnslink.${domain}`]: 'dnslink=/testkey/QRST'
     }),
     async run (t, cmd, domain) {
       const log = []
-      t.dnslink(await cmd(domain), { links: { ipfs: [{ value: 'IJKL', ttl: 100 }] }, log })
-      t.dnslink(await cmd(`_dnslink.${domain}`), { links: { ipfs: [{ value: 'IJKL', ttl: 100 }] }, log })
-      t.dnslink(await cmd(`_dnslink._dnslink.${domain}`), { links: { ipfs: [{ value: 'MNOP', ttl: 100 }] }, log })
-      t.dnslink(await cmd(`_dnslink._dnslink._dnslink.${domain}`), { links: { ipfs: [{ value: 'QRST', ttl: 100 }] }, log })
+      t.dnslink(await cmd(domain), { links: { testkey: [{ value: 'IJKL', ttl: 100 }] }, log })
+      t.dnslink(await cmd(`_dnslink.${domain}`), { links: { testkey: [{ value: 'IJKL', ttl: 100 }] }, log })
+      t.dnslink(await cmd(`_dnslink._dnslink.${domain}`), { links: { testkey: [{ value: 'MNOP', ttl: 100 }] }, log })
+      t.dnslink(await cmd(`_dnslink._dnslink._dnslink.${domain}`), { links: { testkey: [{ value: 'QRST', ttl: 100 }] }, log })
       t.dnslink(await cmd(`_dnslink._dnslink._dnslink._dnslink.${domain}`), {
-        links: { ipfs: [{ value: 'QRST', ttl: 100 }] },
+        links: { testkey: [{ value: 'QRST', ttl: 100 }] },
         log: [{ code: 'FALLBACK' }]
       })
     }
@@ -70,29 +70,29 @@ module.exports = {
   't05: Invalid entries for a key should be ignored, while a valid is returned.': {
     dns: domain => ({
       [`_dnslink.${domain}`]: [
-        'dnslink=/ipfs/',
-        'dnslink=/ipfs/ ',
-        'dnslink=/ipfs/MNOP'
+        'dnslink=/testkey/',
+        'dnslink=/testkey/ ',
+        'dnslink=/testkey/MNOP'
       ]
     }),
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
-        links: { ipfs: [{ value: 'MNOP', ttl: 100 }] },
+        links: { testkey: [{ value: 'MNOP', ttl: 100 }] },
         log: [
-          { code: 'INVALID_ENTRY', entry: 'dnslink=/ipfs/', reason: 'NO_VALUE' },
-          { code: 'INVALID_ENTRY', entry: 'dnslink=/ipfs/ ', reason: 'NO_VALUE' }
+          { code: 'INVALID_ENTRY', entry: 'dnslink=/testkey/', reason: 'NO_VALUE' },
+          { code: 'INVALID_ENTRY', entry: 'dnslink=/testkey/ ', reason: 'NO_VALUE' }
         ]
       })
     }
   },
   't06: Of multiple valid entries for the same key should use the alphabetically smallest (trimmed!)': {
     dns: domain => ({
-      [domain]: ['dnslink=/ipfs/Z123', 'dnslink=/ipfs/QRST', 'dnslink=/ipfs/ UVWX']
+      [domain]: ['dnslink=/testkey/Z123', 'dnslink=/testkey/QRST', 'dnslink=/testkey/ UVWX']
     }),
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
         links: {
-          ipfs: [
+          testkey: [
             { value: 'QRST', ttl: 100 },
             { value: 'UVWX', ttl: 100 },
             { value: 'Z123', ttl: 100 }
@@ -106,12 +106,12 @@ module.exports = {
   },
   't07: Multiple valid entries for different keys should be all returned.': {
     dns: domain => ({
-      [domain]: ['dnslink=/ipfs/4567', 'dnslink=/ipns/890A', 'dnslink=/hyper/AABC']
+      [domain]: ['dnslink=/testkey/4567', 'dnslink=/ipns/890A', 'dnslink=/hyper/AABC']
     }),
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
         links: {
-          ipfs: [{ value: '4567', ttl: 100 }],
+          testkey: [{ value: '4567', ttl: 100 }],
           ipns: [{ value: '890A', ttl: 100 }],
           hyper: [{ value: 'AABC', ttl: 100 }]
         },
@@ -173,7 +173,7 @@ module.exports = {
   't09: Simple /dnslink/ prefixed redirect.': {
     dns: domain => ({
       [`_dnslink.${domain}`]: `dnslink=/dnslink/b.${domain}`,
-      [`_dnslink.b.${domain}`]: 'dnslink=/ipfs/AADE'
+      [`_dnslink.b.${domain}`]: 'dnslink=/testkey/AADE'
     }),
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
@@ -186,12 +186,12 @@ module.exports = {
     domain: 'dnslink.eth',
     flag: 'eth',
     dns: domain => ({
-      [domain]: 'dnslink=/ipfs/AAJK',
-      [`${domain}.link`]: 'dnslink=/ipfs/AAJK'
+      [domain]: 'dnslink=/testkey/AAJK',
+      [`${domain}.link`]: 'dnslink=/testkey/AAJK'
     }),
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
-        links: { ipfs: [{ value: 'AAJK', ttl: 100 }] },
+        links: { testkey: [{ value: 'AAJK', ttl: 100 }] },
         log: [
           { code: 'FALLBACK' }
         ]
@@ -228,28 +228,28 @@ module.exports = {
   },
   't19: valid, tricky domain names': {
     dns: domain => ({
-      [`_dnslink.xn--froschgrn-x9a.${domain}`]: 'dnslink=/ipfs/AAVW',
-      [`_dnslink.1337.${domain}`]: 'dnslink=/ipfs/BAEF',
-      [`_dnslink.abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0.${domain}`]: 'dnslink=/ipfs/BAGH',
-      [`_dnslink.4b.${domain}`]: 'dnslink=/ipfs/BAIJ',
-      [`_dnslink.foo--bar.${domain}`]: 'dnslink=/ipfs/BAMN',
-      [`_dnslink._.7.${domain}`]: 'dnslink=/ipfs/BAOP',
-      [`_dnslink.*.8.${domain}`]: 'dnslink=/ipfs/BAQR',
-      [`_dnslink.s!ome.9.${domain}`]: 'dnslink=/ipfs/BAST',
-      [`_dnslink.domain.com�.${domain}`]: 'dnslink=/ipfs/CAEF',
-      [`_dnslink.domain.com©.${domain}`]: 'dnslink=/ipfs/CAGH',
-      [`_dnslink.日本語.${domain}`]: 'dnslink=/ipfs/CAIJ',
-      [`_dnslink.b\u00fccher.${domain}`]: 'dnslink=/ipfs/CAKL',
-      [`_dnslink.\uFFFD.${domain}`]: 'dnslink=/ipfs/CAMN',
-      [`_dnslink.президент.рф.${domain}`]: 'dnslink=/ipfs/CAOP',
-      [`_dnslink.${DOMAIN_253C}`]: 'dnslink=/ipfs/CAQR',
-      '_dnslink.abc': 'dnslink=/ipfs/BAKL',
-      '_dnslink.example.0': 'dnslink=/ipfs/BAUV',
-      '_dnslink.127.0.0.1': 'dnslink=/ipfs/BAWX',
-      '_dnslink.256.0.0.0': 'dnslink=/ipfs/BAYZ',
-      '_dnslink.192.168.0.9999': 'dnslink=/ipfs/CAST',
-      '_dnslink.192.168.0': 'dnslink=/ipfs/CAUV',
-      '_dnslink.123': 'dnslink=/ipfs/CAWX'
+      [`_dnslink.xn--froschgrn-x9a.${domain}`]: 'dnslink=/testkey/AAVW',
+      [`_dnslink.1337.${domain}`]: 'dnslink=/testkey/BAEF',
+      [`_dnslink.abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0.${domain}`]: 'dnslink=/testkey/BAGH',
+      [`_dnslink.4b.${domain}`]: 'dnslink=/testkey/BAIJ',
+      [`_dnslink.foo--bar.${domain}`]: 'dnslink=/testkey/BAMN',
+      [`_dnslink._.7.${domain}`]: 'dnslink=/testkey/BAOP',
+      [`_dnslink.*.8.${domain}`]: 'dnslink=/testkey/BAQR',
+      [`_dnslink.s!ome.9.${domain}`]: 'dnslink=/testkey/BAST',
+      [`_dnslink.domain.com�.${domain}`]: 'dnslink=/testkey/CAEF',
+      [`_dnslink.domain.com©.${domain}`]: 'dnslink=/testkey/CAGH',
+      [`_dnslink.日本語.${domain}`]: 'dnslink=/testkey/CAIJ',
+      [`_dnslink.b\u00fccher.${domain}`]: 'dnslink=/testkey/CAKL',
+      [`_dnslink.\uFFFD.${domain}`]: 'dnslink=/testkey/CAMN',
+      [`_dnslink.президент.рф.${domain}`]: 'dnslink=/testkey/CAOP',
+      [`_dnslink.${DOMAIN_253C}`]: 'dnslink=/testkey/CAQR',
+      '_dnslink.abc': 'dnslink=/testkey/BAKL',
+      '_dnslink.example.0': 'dnslink=/testkey/BAUV',
+      '_dnslink.127.0.0.1': 'dnslink=/testkey/BAWX',
+      '_dnslink.256.0.0.0': 'dnslink=/testkey/BAYZ',
+      '_dnslink.192.168.0.9999': 'dnslink=/testkey/CAST',
+      '_dnslink.192.168.0': 'dnslink=/testkey/CAUV',
+      '_dnslink.123': 'dnslink=/testkey/CAWX'
     }),
     async run (t, cmd, domain) {
       for (const [subdomain, value] of [
@@ -285,7 +285,7 @@ module.exports = {
 
 async function testLink (t, cmd, domain, value) {
   t.dnslink(await cmd(domain), {
-    links: { ipfs: [{ value, ttl: 100 }] },
+    links: { testkey: [{ value, ttl: 100 }] },
     log: []
   })
 }
