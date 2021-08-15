@@ -17,7 +17,7 @@ const DOMAIN_253C = DOMAIN_254C.substr(0, 244)
 
 function getResult (options) {
   switch (domain) {
-    case 't01.dnslink.dev':
+    case 't01.dnslink.example.com':
       /* eslint-disable-next-line no-case-declarations */
       const result = {
         links: {},
@@ -35,39 +35,39 @@ function getResult (options) {
         result.error = 'Expected dns-over-http port in options'
       }
       return result
-    case 't02.dnslink.dev':
+    case 't02.dnslink.example.com':
       return {
         links: { testkey: [{ value: 'ABCD', ttl: 100 }] },
         log: [{ code: 'FALLBACK' }]
       }
-    case 't03.dnslink.dev':
-    case '_dnslink.t03.dnslink.dev':
+    case 't03.dnslink.example.com':
+    case '_dnslink.t03.dnslink.example.com':
       return {
         links: { testkey: [{ value: 'EFGH', ttl: 100 }] },
         log: []
       }
-    case 't04.dnslink.dev':
-    case '_dnslink.t04.dnslink.dev':
+    case 't04.dnslink.example.com':
+    case '_dnslink.t04.dnslink.example.com':
       return {
         links: { testkey: [{ value: 'IJKL', ttl: 100 }] },
         log: []
       }
-    case '_dnslink._dnslink.t04.dnslink.dev':
+    case '_dnslink._dnslink.t04.dnslink.example.com':
       return {
         links: { testkey: [{ value: 'MNOP', ttl: 100 }] },
         log: []
       }
-    case '_dnslink._dnslink._dnslink.t04.dnslink.dev':
+    case '_dnslink._dnslink._dnslink.t04.dnslink.example.com':
       return {
         links: { testkey: [{ value: 'QRST', ttl: 100 }] },
         log: []
       }
-    case '_dnslink._dnslink._dnslink._dnslink.t04.dnslink.dev':
+    case '_dnslink._dnslink._dnslink._dnslink.t04.dnslink.example.com':
       return {
         links: { testkey: [{ value: 'QRST', ttl: 100 }] },
         log: [{ code: 'FALLBACK' }]
       }
-    case 't05.dnslink.dev':
+    case 't05.dnslink.example.com':
       return {
         links: { testkey: [{ value: 'MNOP', ttl: 100 }] },
         log: [
@@ -75,12 +75,12 @@ function getResult (options) {
           { code: 'INVALID_ENTRY', entry: 'dnslink=/testkey/ ', reason: 'NO_VALUE' }
         ]
       }
-    case 't06.dnslink.dev':
+    case 't06.dnslink.example.com':
       return {
         links: { testkey: [{ value: 'QRST', ttl: 100 }, { value: 'UVWX', ttl: 100 }, { value: 'Z123', ttl: 100 }] },
         log: [{ code: 'FALLBACK' }]
       }
-    case 't07.dnslink.dev':
+    case 't07.dnslink.example.com':
       return {
         links: {
           testkey: [{ value: '4567', ttl: 100 }],
@@ -89,7 +89,7 @@ function getResult (options) {
         },
         log: [{ code: 'FALLBACK' }]
       }
-    case 't08.dnslink.dev':
+    case 't08.dnslink.example.com':
       return {
         links: {
           foo: [
@@ -118,174 +118,174 @@ function getResult (options) {
           { code: 'INVALID_ENTRY', entry: 'dnslink=/フゲ/bar', reason: 'INVALID_CHARACTER' }
         ]
       }
-    case 't09.dnslink.dev':
+    case 't09.dnslink.example.com':
       return {
-        links: { dnslink: [{ value: 'b.t09.dnslink.dev', ttl: 100 }] },
+        links: { dnslink: [{ value: 'b.t09.dnslink.example.com', ttl: 100 }] },
         log: []
       }
-    case 'formaterror.t18.dnslink.dev':
+    case 'formaterror.t18.dnslink.example.com':
       return { error: { code: 'RCODE_1' } }
-    case 'serverfailure.t18.dnslink.dev':
+    case 'serverfailure.t18.dnslink.example.com':
       return { error: { code: 'RCODE_2' } }
-    case 't18.dnslink.dev':
+    case 't18.dnslink.example.com':
       return { error: { code: 'RCODE_3' } }
-    case 'notimplemented.t18.dnslink.dev':
+    case 'notimplemented.t18.dnslink.example.com':
       return { error: { code: 'RCODE_4' } }
-    case 'refused.t18.dnslink.dev':
+    case 'refused.t18.dnslink.example.com':
       return { error: { code: 'RCODE_5' } }
-    case 'yxdomain.t18.dnslink.dev':
+    case 'yxdomain.t18.dnslink.example.com':
       return { error: { code: 'RCODE_6' } }
-    case 'yxrrset.t18.dnslink.dev':
+    case 'yxrrset.t18.dnslink.example.com':
       return { error: { code: 'RCODE_7' } }
-    case 'nxrrset.t18.dnslink.dev':
+    case 'nxrrset.t18.dnslink.example.com':
       return { error: { code: 'RCODE_8' } }
-    case 'notauth.t18.dnslink.dev':
+    case 'notauth.t18.dnslink.example.com':
       return { error: { code: 'RCODE_9' } }
-    case 'notzone.t18.dnslink.dev':
+    case 'notzone.t18.dnslink.example.com':
       return { error: { code: 'RCODE_10' } }
-    case 'dsotypeni.t18.dnslink.dev':
+    case 'dsotypeni.t18.dnslink.example.com':
       return { error: { code: 'RCODE_11' } }
-    case '1.t19.dnslink.dev':
+    case '1.t19.dnslink.example.com':
       return {
         links: { testkey: [{ ttl: 100, value: 'AAVW' }] },
         log: []
       }
-    case 'xn--froschgrn-x9a.t19.dnslink.dev':
+    case 'xn--froschgrn-x9a.t19.dnslink.example.com':
       return {
         links: { testkey: [{ ttl: 100, value: 'AAVW' }] },
         log: []
       }
-    case '2.t19.dnslink.dev':
+    case '2.t19.dnslink.example.com':
       return {
         links: { testkey: [{ ttl: 100, value: 'BAEF' }] },
         log: []
       }
-    case '1337.t19.dnslink.dev':
+    case '1337.t19.dnslink.example.com':
       return {
         links: { testkey: [{ ttl: 100, value: 'BAEF' }] },
         log: []
       }
-    case '3.t19.dnslink.dev':
+    case '3.t19.dnslink.example.com':
       return {
         links: { testkey: [{ ttl: 100, value: 'BAGH' }] },
         log: []
       }
-    case 'abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0.t19.dnslink.dev':
+    case 'abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0.t19.dnslink.example.com':
       return {
         links: { testkey: [{ ttl: 100, value: 'BAGH' }] },
         log: []
       }
-    case '4.t19.dnslink.dev':
+    case '4.t19.dnslink.example.com':
       return {
         links: { testkey: [{ ttl: 100, value: 'BAIJ' }] },
         log: []
       }
-    case '4b.t19.dnslink.dev':
+    case '4b.t19.dnslink.example.com':
       return {
         links: { testkey: [{ ttl: 100, value: 'BAIJ' }] },
         log: []
       }
-    case '6.t19.dnslink.dev':
+    case '6.t19.dnslink.example.com':
       return {
         links: { testkey: [{ value: 'BAMN', ttl: 100 }] },
         log: []
       }
-    case 'foo--bar.t19.dnslink.dev':
+    case 'foo--bar.t19.dnslink.example.com':
       return {
         links: { testkey: [{ value: 'BAMN', ttl: 100 }] },
         log: []
       }
-    case '7.t19.dnslink.dev':
+    case '7.t19.dnslink.example.com':
       return {
         links: { testkey: [{ value: 'BAOP', ttl: 100 }] },
         log: []
       }
-    case '_.7.t19.dnslink.dev':
+    case '_.7.t19.dnslink.example.com':
       return {
         links: { testkey: [{ value: 'BAOP', ttl: 100 }] },
         log: []
       }
-    case '8.t19.dnslink.dev':
+    case '8.t19.dnslink.example.com':
       return {
         links: { testkey: [{ value: 'BAQR', ttl: 100 }] },
         log: []
       }
-    case '*.8.t19.dnslink.dev':
+    case '*.8.t19.dnslink.example.com':
       return {
         links: { testkey: [{ value: 'BAQR', ttl: 100 }] },
         log: []
       }
-    case '9.t19.dnslink.dev':
+    case '9.t19.dnslink.example.com':
       return {
         links: { testkey: [{ value: 'BAST', ttl: 100 }] },
         log: []
       }
-    case 's!ome.9.t19.dnslink.dev':
+    case 's!ome.9.t19.dnslink.example.com':
       return {
         links: { testkey: [{ value: 'BAST', ttl: 100 }] },
         log: []
       }
-    case '10.t19.dnslink.dev':
+    case '10.t19.dnslink.example.com':
       return {
         links: { testkey: [{ value: 'CAEF', ttl: 100 }] },
         log: []
       }
-    case 'domain.com�.t19.dnslink.dev':
+    case 'domain.com�.t19.dnslink.example.com':
       return {
         links: { testkey: [{ value: 'CAEF', ttl: 100 }] },
         log: []
       }
-    case '11.t19.dnslink.dev':
+    case '11.t19.dnslink.example.com':
       return {
         links: { testkey: [{ value: 'CAGH', ttl: 100 }] },
         log: []
       }
-    case 'domain.com©.t19.dnslink.dev':
+    case 'domain.com©.t19.dnslink.example.com':
       return {
         links: { testkey: [{ value: 'CAGH', ttl: 100 }] },
         log: []
       }
-    case '12.t19.dnslink.dev':
+    case '12.t19.dnslink.example.com':
       return {
         links: { testkey: [{ value: 'CAIJ', ttl: 100 }] },
         log: []
       }
-    case '日本語.t19.dnslink.dev':
+    case '日本語.t19.dnslink.example.com':
       return {
         links: { testkey: [{ value: 'CAIJ', ttl: 100 }] },
         log: []
       }
-    case '13.t19.dnslink.dev':
+    case '13.t19.dnslink.example.com':
       return {
         links: { testkey: [{ value: 'CAKL', ttl: 100 }] },
         log: []
       }
-    case 'b\u00fccher.t19.dnslink.dev':
+    case 'b\u00fccher.t19.dnslink.example.com':
       return {
         links: { testkey: [{ value: 'CAKL', ttl: 100 }] },
         log: []
       }
-    case '14.t19.dnslink.dev':
+    case '14.t19.dnslink.example.com':
       return {
         links: { testkey: [{ value: 'CAMN', ttl: 100 }] },
         log: []
       }
-    case '\uFFFD.t19.dnslink.dev':
+    case '\uFFFD.t19.dnslink.example.com':
       return {
         links: { testkey: [{ value: 'CAMN', ttl: 100 }] },
         log: []
       }
-    case '15.t19.dnslink.dev':
+    case '15.t19.dnslink.example.com':
       return {
         links: { testkey: [{ value: 'CAOP', ttl: 100 }] },
         log: []
       }
-    case 'президент.рф.t19.dnslink.dev':
+    case 'президент.рф.t19.dnslink.example.com':
       return {
         links: { testkey: [{ value: 'CAOP', ttl: 100 }] },
         log: []
       }
-    case '16.t19.dnslink.dev':
+    case '16.t19.dnslink.example.com':
       return {
         links: { testkey: [{ value: 'CAQR', ttl: 100 }] },
         log: []
@@ -295,7 +295,7 @@ function getResult (options) {
         links: { testkey: [{ value: 'CAQR', ttl: 100 }] },
         log: []
       }
-    case '17.t19.dnslink.dev':
+    case '17.t19.dnslink.example.com':
       return {
         links: { testkey: [{ value: 'CAQR', ttl: 100 }] },
         log: []

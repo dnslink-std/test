@@ -20,7 +20,7 @@ function inspect (obj, depth = 7) {
 const SETUP = {}
 for (const [key, test] of Object.entries(tests)) {
   const subdomain = /^(t\d+):/.exec(key)[1]
-  const domain = `${subdomain}.${test.domain || 'dnslink.dev'}`
+  const domain = `${subdomain}.${test.domain || 'dnslink.example.com'}`
   test.targetDomain = domain
 
   try {
