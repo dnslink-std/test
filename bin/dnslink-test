@@ -99,7 +99,6 @@ OPTIONS
 
 FLAGS
     --enable=log   Test if the implementation supports log messages
-    --enable=eth   Test if the implementation supports .eth domains
 
 Read more about it here: ${homepage}
 

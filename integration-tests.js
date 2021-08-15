@@ -182,22 +182,6 @@ module.exports = {
       })
     }
   },
-  't13: .eth domain support.': {
-    domain: 'dnslink.eth',
-    flag: 'eth',
-    dns: domain => ({
-      [domain]: 'dnslink=/testkey/AAJK',
-      [`${domain}.link`]: 'dnslink=/testkey/AAJK'
-    }),
-    async run (t, cmd, domain) {
-      t.dnslink(await cmd(domain), {
-        links: { testkey: [{ value: 'AAJK', ttl: 100 }] },
-        log: [
-          { code: 'FALLBACK' }
-        ]
-      })
-    }
-  },
   't18: dns RCODE is respected': {
     dns: domain => ({
       // https://www.iana.org/assignments/dns-parameters/dns-parameters.xhtml

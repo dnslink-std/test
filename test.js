@@ -123,13 +123,6 @@ function getResult (options) {
         links: { dnslink: [{ value: 'b.t09.dnslink.dev', ttl: 100 }] },
         log: []
       }
-    case 't13.dnslink.eth':
-      return {
-        links: { testkey: [{ value: 'AAJK', ttl: 100 }] },
-        log: [
-          { code: 'FALLBACK' }
-        ]
-      }
     case 'formaterror.t18.dnslink.dev':
       return { error: { code: 'RCODE_1' } }
     case 'serverfailure.t18.dnslink.dev':
