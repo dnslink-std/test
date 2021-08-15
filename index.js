@@ -197,7 +197,10 @@ function dnslink (flags, t, actual, expected) {
     }
     return
   }
-  t.deepEquals(excludeLog(actual), excludeLog(expected), inspect(expected))
+  t.deepEquals(excludeSpecial(actual), excludeSpecial(expected), inspect(expected))
+  if (actual.txtEntries) {
+    t.deepEquals(actual.txtEntries, compileTxtEntries(expected.links), 'Support for TXT entries')
+  }
   if (flags.log && expected.log) {
     let log = []
     if (Array.isArray(actual.log)) {
@@ -232,10 +235,28 @@ function dnslink (flags, t, actual, expected) {
   }
 }
 
-function excludeLog (obj) {
+function excludeSpecial (obj) {
   obj = { ...obj }
   delete obj.log
+  delete obj.txtEntries
   return obj
+}
+
+function compileTxtEntries (links) {
+  const txtEntries = []
+  for (const ns of Object.keys(links).sort()) {
+    const linksByNS = links[ns]
+    for (const { identifier, ttl } of linksByNS.sort(sortByID)) {
+      txtEntries.push({ value: `/${ns}/${identifier}`, ttl })
+    }
+  }
+  return txtEntries
+}
+
+function sortByID (a, b) {
+  if (a.identifier > b.identifier) return 1
+  if (a.identifier < b.identifier) return -1
+  return 0
 }
 
 module.exports = {
