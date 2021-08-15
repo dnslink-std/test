@@ -100,17 +100,20 @@ function getResult (options) {
             { identifier: 'bar/baz?qoo=zap', ttl: 100 }
           ],
           boo: [
-            { identifier: 'ホガ', ttl: 100 }
+            { identifier: '%E3%83%9B%E3%82%AC', ttl: 100 }
           ],
-          ふげ: [
+          '%E3%81%B5%E3%81%92': [
             { identifier: 'baz', ttl: 100 }
+          ],
+          'boo%': [
+            { identifier: 'baz%', ttl: 100 }
           ]
         },
         log: [
           { code: 'FALLBACK' },
           // Note: these errors are purposefully shuffled to make sure that the tests are order independent
           { code: 'INVALID_ENTRY', entry: 'dnslink=/', reason: 'NAMESPACE_MISSING' },
-          { code: 'INVALID_ENTRY', entry: 'dnslink=/boo%', reason: 'INVALID_ENCODING' },
+          { code: 'INVALID_ENTRY', entry: 'dnslink=/boo%', reason: 'NO_IDENTIFIER' },
           { code: 'INVALID_ENTRY', entry: 'dnslink=', reason: 'WRONG_START' },
           { code: 'INVALID_ENTRY', entry: 'dnslink=/foo/', reason: 'NO_IDENTIFIER' },
           { code: 'INVALID_ENTRY', entry: 'dnslink=/foo', reason: 'NO_IDENTIFIER' },

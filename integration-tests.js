@@ -137,7 +137,8 @@ module.exports = {
         'dnslink=/foo/ホガ',
         'dnslink=/%E3%81%B5%E3%81%92/baz',
         'dnslink=/boo/%E3%83%9B%E3%82%AC',
-        'dnslink=/boo%'
+        'dnslink=/boo%',
+        'dnslink=/boo%/baz%'
       ]
     }),
     async run (t, cmd, domain) {
@@ -151,10 +152,13 @@ module.exports = {
             { identifier: 'bar/baz?qoo=zap', ttl: 100 }
           ],
           boo: [
-            { identifier: 'ホガ', ttl: 100 }
+            { identifier: '%E3%83%9B%E3%82%AC', ttl: 100 }
           ],
-          ふげ: [
+          '%E3%81%B5%E3%81%92': [
             { identifier: 'baz', ttl: 100 }
+          ],
+          'boo%': [
+            { identifier: 'baz%', ttl: 100 }
           ]
         },
         log: [
@@ -165,7 +169,7 @@ module.exports = {
           { code: 'INVALID_ENTRY', entry: 'dnslink=/foo/', reason: 'NO_IDENTIFIER' },
           { code: 'INVALID_ENTRY', entry: 'dnslink=/フゲ/bar', reason: 'INVALID_CHARACTER' },
           { code: 'INVALID_ENTRY', entry: 'dnslink=/foo/ホガ', reason: 'INVALID_CHARACTER' },
-          { code: 'INVALID_ENTRY', entry: 'dnslink=/boo%', reason: 'INVALID_ENCODING' }
+          { code: 'INVALID_ENTRY', entry: 'dnslink=/boo%', reason: 'NO_IDENTIFIER' }
         ]
       })
     }
