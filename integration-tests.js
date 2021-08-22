@@ -71,7 +71,6 @@ module.exports = {
     dns: domain => ({
       [`_dnslink.${domain}`]: [
         'dnslink=/testnamespace/',
-        'dnslink=/testnamespace/ ',
         'dnslink=/testnamespace/MNOP'
       ]
     }),
@@ -79,26 +78,39 @@ module.exports = {
       t.dnslink(await cmd(domain), {
         links: { testnamespace: [{ identifier: 'MNOP', ttl: 100 }] },
         log: [
-          { code: 'INVALID_ENTRY', entry: 'dnslink=/testnamespace/', reason: 'NO_IDENTIFIER' },
-          { code: 'INVALID_ENTRY', entry: 'dnslink=/testnamespace/ ', reason: 'NO_IDENTIFIER' }
+          { code: 'INVALID_ENTRY', entry: 'dnslink=/testnamespace/', reason: 'NO_IDENTIFIER' }
         ]
       })
     }
   },
   't06: Of multiple valid entries for the same namespace should use the alphabetically smallest (trimmed!)': {
     dns: domain => ({
-      [domain]: ['dnslink=/testnamespace/Z123', 'dnslink=/testnamespace/QRST', 'dnslink=/testnamespace/ UVWX']
+      [domain]: [
+        'dnslink=/testnamespace/Z123 ', 'dnslink=/testnamespace/QRST', 'dnslink=/testnamespace/ UVWX',
+        'dnslink=/testnamespace/ ',
+        'dnslink= /testnamespace/ x',
+        'dnslink=/ testnamespace/4567',
+        'dnslink=/testnamespace /890A'
+      ]
     }),
     async run (t, cmd, domain) {
       t.dnslink(await cmd(domain), {
         links: {
           testnamespace: [
+            { identifier: ' ', ttl: 100 },
+            { identifier: ' UVWX', ttl: 100 },
             { identifier: 'QRST', ttl: 100 },
-            { identifier: 'UVWX', ttl: 100 },
-            { identifier: 'Z123', ttl: 100 }
+            { identifier: 'Z123 ', ttl: 100 }
+          ],
+          ' testnamespace': [
+            { identifier: '4567', ttl: 100 },
+          ],
+          'testnamespace ': [
+            { identifier: '890A', ttl: 100 },
           ]
         },
         log: [
+          { code: 'INVALID_ENTRY', entry: 'dnslink= /testnamespace/ x', reason: 'WRONG_START' },
           { code: 'FALLBACK' }
         ]
       })
@@ -146,10 +158,12 @@ module.exports = {
         links: {
           foo: [
             { identifier: 'bar', ttl: 100 },
-            { identifier: 'bar', ttl: 100 },
-            { identifier: 'bar/ baz/ ?qoo=zap', ttl: 100 },
+            { identifier: 'bar/ baz/ ?qoo=zap ', ttl: 100 },
             { identifier: 'bar/baz', ttl: 100 },
             { identifier: 'bar/baz?qoo=zap', ttl: 100 }
+          ],
+          'foo ': [
+            { identifier: ' bar ', ttl: 100 },
           ],
           boo: [
             { identifier: '%E3%83%9B%E3%82%AC', ttl: 100 }
