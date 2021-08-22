@@ -144,27 +144,27 @@ function getResult (options) {
         log: []
       }
     case 'formaterror.t18.dnslink.example.com':
-      return { error: { code: 'RCODE_1' } }
+      return { error: { code: 'DNS_RCODE_1' } }
     case 'serverfailure.t18.dnslink.example.com':
-      return { error: { code: 'RCODE_2' } }
+      return { error: { code: 'DNS_RCODE_2' } }
     case 't18.dnslink.example.com':
-      return { error: { code: 'RCODE_3' } }
+      return { error: { code: 'DNS_RCODE_3' } }
     case 'notimplemented.t18.dnslink.example.com':
-      return { error: { code: 'RCODE_4' } }
+      return { error: { code: 'DNS_RCODE_4' } }
     case 'refused.t18.dnslink.example.com':
-      return { error: { code: 'RCODE_5' } }
+      return { error: { code: 'DNS_RCODE_5' } }
     case 'yxdomain.t18.dnslink.example.com':
-      return { error: { code: 'RCODE_6' } }
+      return { error: { code: 'DNS_RCODE_6' } }
     case 'yxrrset.t18.dnslink.example.com':
-      return { error: { code: 'RCODE_7' } }
+      return { error: { code: 'DNS_RCODE_7' } }
     case 'nxrrset.t18.dnslink.example.com':
-      return { error: { code: 'RCODE_8' } }
+      return { error: { code: 'DNS_RCODE_8' } }
     case 'notauth.t18.dnslink.example.com':
-      return { error: { code: 'RCODE_9' } }
+      return { error: { code: 'DNS_RCODE_9' } }
     case 'notzone.t18.dnslink.example.com':
-      return { error: { code: 'RCODE_10' } }
+      return { error: { code: 'DNS_RCODE_10' } }
     case 'dsotypeni.t18.dnslink.example.com':
-      return { error: { code: 'RCODE_11' } }
+      return { error: { code: 'DNS_RCODE_11' } }
     case '1.t19.dnslink.example.com':
       return {
         links: { testnamespace: [{ ttl: 100, identifier: 'AAVW' }] },

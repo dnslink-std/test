@@ -200,32 +200,32 @@ module.exports = {
       })
     }
   },
-  't18: dns RCODE is respected': {
+  't18: dns DNS RCODE is respected': {
     dns: domain => ({
       // https://www.iana.org/assignments/dns-parameters/dns-parameters.xhtml
-      [`_dnslink.formaterror.${domain}`]: { type: 'RCODE', data: 1 },
-      [`_dnslink.serverfailure.${domain}`]: { type: 'RCODE', data: 2 },
-      [`_dnslink.notimplemented.${domain}`]: { type: 'RCODE', data: 4 },
-      [`_dnslink.refused.${domain}`]: { type: 'RCODE', data: 5 },
-      [`_dnslink.yxdomain.${domain}`]: { type: 'RCODE', data: 6 },
-      [`_dnslink.yxrrset.${domain}`]: { type: 'RCODE', data: 7 },
-      [`_dnslink.nxrrset.${domain}`]: { type: 'RCODE', data: 8 },
-      [`_dnslink.notauth.${domain}`]: { type: 'RCODE', data: 9 },
-      [`_dnslink.notzone.${domain}`]: { type: 'RCODE', data: 10 },
-      [`_dnslink.dsotypeni.${domain}`]: { type: 'RCODE', data: 11 }
+      [`_dnslink.formaterror.${domain}`]: { type: 'DNS_RCODE', data: 1 },
+      [`_dnslink.serverfailure.${domain}`]: { type: 'DNS_RCODE', data: 2 },
+      [`_dnslink.notimplemented.${domain}`]: { type: 'DNS_RCODE', data: 4 },
+      [`_dnslink.refused.${domain}`]: { type: 'DNS_RCODE', data: 5 },
+      [`_dnslink.yxdomain.${domain}`]: { type: 'DNS_RCODE', data: 6 },
+      [`_dnslink.yxrrset.${domain}`]: { type: 'DNS_RCODE', data: 7 },
+      [`_dnslink.nxrrset.${domain}`]: { type: 'DNS_RCODE', data: 8 },
+      [`_dnslink.notauth.${domain}`]: { type: 'DNS_RCODE', data: 9 },
+      [`_dnslink.notzone.${domain}`]: { type: 'DNS_RCODE', data: 10 },
+      [`_dnslink.dsotypeni.${domain}`]: { type: 'DNS_RCODE', data: 11 }
     }),
     async run (t, cmd, domain) {
-      t.dnslink(await cmd(`formaterror.${domain}`), { error: { code: 'RCODE_1' } })
-      t.dnslink(await cmd(`serverfailure.${domain}`), { error: { code: 'RCODE_2' } })
-      t.dnslink(await cmd(domain), { error: { code: 'RCODE_3' } })
-      t.dnslink(await cmd(`notimplemented.${domain}`), { error: { code: 'RCODE_4' } })
-      t.dnslink(await cmd(`refused.${domain}`), { error: { code: 'RCODE_5' } })
-      t.dnslink(await cmd(`yxdomain.${domain}`), { error: { code: 'RCODE_6' } })
-      t.dnslink(await cmd(`yxrrset.${domain}`), { error: { code: 'RCODE_7' } })
-      t.dnslink(await cmd(`nxrrset.${domain}`), { error: { code: 'RCODE_8' } })
-      t.dnslink(await cmd(`notauth.${domain}`), { error: { code: 'RCODE_9' } })
-      t.dnslink(await cmd(`notzone.${domain}`), { error: { code: 'RCODE_10' } })
-      t.dnslink(await cmd(`dsotypeni.${domain}`), { error: { code: 'RCODE_11' } })
+      t.dnslink(await cmd(`formaterror.${domain}`), { error: { code: 'DNS_RCODE_1' } })
+      t.dnslink(await cmd(`serverfailure.${domain}`), { error: { code: 'DNS_RCODE_2' } })
+      t.dnslink(await cmd(domain), { error: { code: 'DNS_RCODE_3' } })
+      t.dnslink(await cmd(`notimplemented.${domain}`), { error: { code: 'DNS_RCODE_4' } })
+      t.dnslink(await cmd(`refused.${domain}`), { error: { code: 'DNS_RCODE_5' } })
+      t.dnslink(await cmd(`yxdomain.${domain}`), { error: { code: 'DNS_RCODE_6' } })
+      t.dnslink(await cmd(`yxrrset.${domain}`), { error: { code: 'DNS_RCODE_7' } })
+      t.dnslink(await cmd(`nxrrset.${domain}`), { error: { code: 'DNS_RCODE_8' } })
+      t.dnslink(await cmd(`notauth.${domain}`), { error: { code: 'DNS_RCODE_9' } })
+      t.dnslink(await cmd(`notzone.${domain}`), { error: { code: 'DNS_RCODE_10' } })
+      t.dnslink(await cmd(`dsotypeni.${domain}`), { error: { code: 'DNS_RCODE_11' } })
     }
   },
   't19: valid, tricky domain names': {
