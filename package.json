@@ -1,6 +1,6 @@
 {
   "name": "@dnslink/test",
-  "version": "0.11.0",
+  "version": "0.11.1",
   "description": "A programming-language independent test harness for DNSLink implementations.",
   "main": "index.js",
   "types": "types",
@@ -9,7 +9,7 @@
   },
   "scripts": {
     "lint": "standard *.js bin/* && dtslint --localTs node_modules/typescript/lib types",
-    "test": "node bin/dnslink-test -- node test.js && node bin/dnslink-test --enable=eth --enable=log -- node test.js"
+    "test": "node bin/dnslink-test -- node test.js && node bin/dnslink-test --enable=log -- node test.js"
   },
   "standard": {
     "ignore": "*.ts",
