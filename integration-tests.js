@@ -157,7 +157,7 @@ module.exports = {
         'dnslink= //\x19',
         'dnslink=//\x19',
         'dnslink=//',
-        'dnslink=/testnamespace/',
+        'dnslink=/testnamespace/'
       ]
     }),
     run: async (t, cmd, domain) =>
@@ -177,7 +177,7 @@ module.exports = {
         'dnslink=/testnamespace/Z123 ',
         'dnslink=/testnamespace/QRST',
         'dnslink=/testnamespace/ UVWX',
-        'dnslink=/testnamespace/lowercase',
+        'dnslink=/testnamespace/lowercase'
       ]
     }),
     run: async (t, cmd, domain) =>
@@ -207,7 +207,7 @@ module.exports = {
         links: {
           ns_1: [
             { identifier: '4567', ttl: 100 },
-            { identifier: '890A', ttl: 100 },
+            { identifier: '890A', ttl: 100 }
           ],
           ns_3: [{ identifier: 'AABC', ttl: 100 }],
           ns_2: [{ identifier: 'AADE', ttl: 100 }]
@@ -238,13 +238,13 @@ module.exports = {
             { identifier: '%E3%83%9B%E3%82%AC', ttl: 100 },
             { identifier: 'AANO/PQ?RS=TU', ttl: 100 },
             { identifier: 'AAVW/ XY/ ?Z1=23 ', ttl: 100 }
-          ], 
+          ],
           ' ': [{ identifier: 'AAFG', ttl: 100 }],
           'testnamespace ': [{ identifier: ' AAHI ', ttl: 100 }],
           ' testnamespace': [{ identifier: 'AAJK/LM', ttl: 100 }],
           '%E3%81%B5%E3%81%92': [{ identifier: 'AA45', ttl: 100 }],
           'testnamespace%': [{ identifier: 'AA67%', ttl: 100 }],
-          dnslink: [ { identifier: 'AA89', ttl: 100 } ]
+          dnslink: [{ identifier: 'AA89', ttl: 100 }]
         },
         log: [{ code: 'FALLBACK' }]
       })
